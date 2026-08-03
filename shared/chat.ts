@@ -24,9 +24,15 @@ export interface ChatContext {
   emotionType?: string
 }
 
+export interface ChatPersona {
+  name: string
+  style: string
+}
+
 export interface ChatRequest {
   messages: Pick<ChatMessage, 'role' | 'content'>[]
   context?: ChatContext
+  persona?: ChatPersona
 }
 
 export interface SupportMessage extends ChatInsight {

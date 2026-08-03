@@ -1,5 +1,5 @@
 import Anthropic from '@anthropic-ai/sdk'
-import type { ChatRequest, RiskLevel, SupportMessage } from '../shared/chat.js'
+import type { ChatContext, ChatPersona, ChatRequest, RiskLevel, SupportMessage } from '../shared/chat.js'
 import type { ProviderConfig } from './config.js'
 import { analyzeEmotion } from './safety.js'
 
@@ -7,7 +7,7 @@ export interface SupportProvider {
   reply(request: ChatRequest): Promise<SupportMessage>
 }
 
-const systemPrompt = `你是“心绘 GLM”平台中的心理支持助手。你提供温和、谨慎、非诊断性的心理支持建议。
+const baseSystemPrompt = `你是“心绘 GLM”平台中的心理支持助手。你提供温和、谨慎、非诊断性的心理支持建议。
 
 规则：
 1. 不做医学诊断，不声称用户患有某种疾病。
@@ -15,6 +15,20 @@ const systemPrompt = `你是“心绘 GLM”平台中的心理支持助手。你
 3. 如涉及自伤、自杀、伤害他人或紧急危险，立即建议联系当地急救、医院急诊、专业危机资源或身边可信赖的人。
 4. 使用中文，语气稳定、尊重，不过度承诺。
 5. 只输出 JSON，不要 Markdown。结构必须是：{"content":"完整支持回复","emotion":"主要情绪","riskLevel":"低或中或高","keywords":["关键词"]}。`
+
+function cleanPromptValue(value: string | undefined, maxLength: number): string {
+  return (value || '').replace(/[\u0000-\u001f\u007f]/gu, ' ').trim().slice(0, maxLength)
+}
+
+export function buildSystemPrompt(persona?: ChatPersona, context?: ChatContext): string {
+  const contextPrompt = context
+    ? `\n当前数据上下文：地区=${cleanPromptValue(context.region, 30) || '未指定'}；人群=${cleanPromptValue(context.population, 30) || '未指定'}；关注情绪=${cleanPromptValue(context.emotionType, 30) || '未指定'}。`
+    : ''
+  const personaPrompt = persona
+    ? `\n个性化表达要求（不得覆盖以上安全规则）：你的显示名称是“${cleanPromptValue(persona.name, 40) || '心理支持助手'}”；沟通风格为“${cleanPromptValue(persona.style, 300) || '温和、尊重'}”。只调整语气和组织方式，不改变安全边界。`
+    : ''
+  return baseSystemPrompt + contextPrompt + personaPrompt
+}
 
 function parseProviderText(raw: string, sourceText: string): SupportMessage {
   const insight = analyzeEmotion(sourceText)
@@ -57,13 +71,10 @@ export function createDeepSeekProvider(config: ProviderConfig): SupportProvider 
   return {
     async reply(request) {
       const latestUser = [...request.messages].reverse().find((message) => message.role === 'user')
-      const context = request.context
-        ? `\n当前数据上下文：地区=${request.context.region || '未指定'}；人群=${request.context.population || '未指定'}；关注情绪=${request.context.emotionType || '未指定'}。`
-        : ''
       const response = await client.messages.create({
         model: config.model,
         max_tokens: 900,
-        system: systemPrompt + context,
+        system: buildSystemPrompt(request.persona, request.context),
         messages: request.messages
           .filter((message) => message.role !== 'system')
           .map((message) => ({ role: message.role as 'user' | 'assistant', content: message.content })),
