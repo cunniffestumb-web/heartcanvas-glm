@@ -53,10 +53,13 @@ describe('chart option builders', () => {
     const series = (option.series as Array<{
       type: string
       symbolSize: (value: [number, number, number]) => [number, number]
+      itemStyle: { opacity?: number; color?: string }
       data: Array<{ value: [number, number, number]; label: { show: boolean; fontSize: number } }>
     }>)[0]
 
     expect(series.type).toBe('scatter')
+    expect(series.itemStyle.opacity).not.toBe(0)
+    expect(series.itemStyle.color).toContain('rgba')
     expect(series.data).toHaveLength(dataset.keywords.length)
     expect(series.data.every((item) => item.label.show && series.symbolSize(item.value).every((size) => size > 10))).toBe(true)
     expect(series.data[0].label.fontSize).toBeGreaterThan(series.data.at(-1)!.label.fontSize)

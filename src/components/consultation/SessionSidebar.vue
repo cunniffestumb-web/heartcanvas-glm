@@ -82,7 +82,7 @@ function select(id: string) {
 .privacy-note { margin: auto 7px 0; padding-top: 22px; color: var(--ink-soft); font-size: 9px; line-height: 1.6; }
 .drawer-backdrop { display: none; }
 @media (max-width: 1000px) {
-  .session-panel { position: fixed; z-index: 70; inset: 0 auto 0 0; width: min(86vw, 320px); transform: translateX(-105%); transition: transform 220ms ease; box-shadow: var(--shadow-md); }.session-panel.open { transform: translateX(0); }.mobile-panel-head { display: flex; }.drawer-backdrop { position: fixed; z-index: 65; inset: 0; display: block; border: 0; background: rgb(23 38 36 / 35%); }
+  .session-panel { position: fixed; z-index: 150; inset: 0 auto 0 0; width: min(86vw, 320px); transform: translateX(-105%); transition: transform 220ms ease; box-shadow: var(--shadow-md); }.session-panel.open { transform: translateX(0); }.mobile-panel-head { display: flex; }.drawer-backdrop { position: fixed; z-index: 145; inset: 0; display: block; border: 0; background: rgb(23 38 36 / 35%); }
   .session-actions { opacity: 1; }
 }
 </style>

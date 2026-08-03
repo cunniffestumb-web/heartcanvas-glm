@@ -194,7 +194,7 @@ export function buildKeywordOption(rows: KeywordRecord[]): EChartsOption {
         const ratio = (value[2] - min) / Math.max(1, max - min)
         return [58 + ratio * 48, 30 + ratio * 16]
       },
-      itemStyle: { opacity: 0 },
+      itemStyle: { color: 'rgba(0,0,0,0)' },
       emphasis: { scale: 1.12 },
       labelLayout: { hideOverlap: false },
       data: rows.map((word, index) => {
