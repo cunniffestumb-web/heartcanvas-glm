@@ -46,9 +46,9 @@ function selectRegion(name: string) {
         <div>
           <p class="page-kicker">心理数据陈列馆</p>
           <h1>看见情绪的地域与人群差异</h1>
-          <p>统一筛选上下文会驱动全部图表。地图点击可进一步聚焦到省份，并把相关背景带入诊疗室。</p>
+          <p>统一筛选上下文会驱动全部图表。地图点击可进一步聚焦到省份，并把相关背景带入智能支持空间。</p>
         </div>
-        <div class="demo-notice"><InfoIcon :size="16" /><span><strong>演示数据</strong> 不代表真实医学或流行病学结论</span></div>
+        <div class="demo-notice"><InfoIcon :size="16" /><span><strong>数据说明</strong> 聚合指标用于群体趋势分析，不构成医学诊断</span></div>
       </div>
 
       <div class="filters-row reveal delay-1">
@@ -74,7 +74,7 @@ function selectRegion(name: string) {
                 <div><dt>主要情绪</dt><dd>{{ store.selectedRegion.mainEmotion }}</dd></div>
                 <div><dt>建议关注</dt><dd>{{ store.selectedRegion.suggestion }}</dd></div>
               </dl>
-              <RouterLink class="detail-link" :to="consultationLink">带着数据进入诊疗室 <ArrowRightIcon :size="16" /></RouterLink>
+              <RouterLink class="detail-link" :to="consultationLink">带着数据开始智能支持 <ArrowRightIcon :size="16" /></RouterLink>
             </aside>
           </div>
         </article>

@@ -10,7 +10,7 @@ const navItems = [
   { to: '/', label: '首页' },
   { to: '/gallery', label: '陈列馆' },
   { to: '/database', label: '数据库' },
-  { to: '/consultation', label: '诊疗室' },
+  { to: '/consultation', label: '智能支持' },
   { to: '/technology', label: '技术亮点' },
   { to: '/scenarios', label: '应用场景' },
 ]

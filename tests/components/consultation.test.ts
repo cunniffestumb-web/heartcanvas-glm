@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest'
 import { mount } from '@vue/test-utils'
 import ChatInput from '@/components/consultation/ChatInput.vue'
 import CrisisNotice from '@/components/consultation/CrisisNotice.vue'
+import ModeBadge from '@/components/common/ModeBadge.vue'
 
 describe('consultation controls', () => {
   it('prevents empty messages and emits trimmed content', async () => {
@@ -29,5 +30,14 @@ describe('consultation controls', () => {
     expect(wrapper.text()).toContain('立即联系当地急救电话')
     expect(wrapper.text()).toContain('可信赖的人')
     expect(wrapper.text()).toContain('不能替代紧急救助')
+  })
+
+  it('uses a presentation-ready service status label', () => {
+    const online = mount(ModeBadge, { props: { mode: 'online' } })
+    const fallback = mount(ModeBadge, { props: { mode: 'mock' } })
+
+    expect(online.text()).toContain('智能服务已连接')
+    expect(fallback.text()).toContain('基础支持可用')
+    expect(`${online.text()} ${fallback.text()}`).not.toMatch(/mock|演示|模式/iu)
   })
 })

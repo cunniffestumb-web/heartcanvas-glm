@@ -18,20 +18,20 @@ const preview = getGalleryDataset({ year: 2025, region: '全国', population: '�
     <section class="home-hero">
       <div class="page-inner hero-layout">
         <div class="hero-copy reveal">
-          <p class="product-kicker"><span></span> 基于 ChatGLM2-6B 的心理数据平台</p>
+          <p class="product-kicker"><span></span> AI 驱动的心理健康洞察平台</p>
           <h1>心绘 GLM</h1>
           <p class="hero-subtitle">用数据看见情绪，用智能辅助干预</p>
-          <p class="hero-description">连接心理健康数据陈列、群体风险洞察与非诊断性智能支持，形成“识别 → 分析 → 干预”的演示闭环。</p>
+          <p class="hero-description">连接心理健康数据陈列、群体风险洞察与非诊断性智能支持，形成“识别 → 分析 → 干预”的完整服务闭环。</p>
           <div class="hero-actions">
             <RouterLink class="button primary" to="/gallery">进入陈列馆 <ArrowRightIcon :size="17" /></RouterLink>
-            <RouterLink class="button secondary" to="/consultation">进入诊疗室 <MessageCircleIcon :size="17" /></RouterLink>
+            <RouterLink class="button secondary" to="/consultation">开始智能支持 <MessageCircleIcon :size="17" /></RouterLink>
           </div>
           <p class="safety-line"><ShieldCheckIcon :size="16" /> 平台提供心理支持建议，不替代专业咨询或医疗服务</p>
         </div>
 
         <div class="hero-data reveal delay-1" aria-label="全国心理风险数据预览">
           <div class="preview-head">
-            <div><span class="live-dot"></span><small>全国演示数据 · 2025</small></div>
+            <div><span class="live-dot"></span><small>全国群体趋势 · 2025</small></div>
             <strong>69</strong>
             <span>综合关注指数</span>
           </div>
@@ -42,8 +42,8 @@ const preview = getGalleryDataset({ year: 2025, region: '全国', population: '�
 
     <section class="home-stats">
       <div class="page-inner stats-grid">
-        <StatCard value="69" label="全国情绪风险指数" note="基于演示数据" tone="teal"><template #icon><BarChart3Icon :size="20" /></template></StatCard>
-        <StatCard value="12,680" label="本月咨询模拟次数" note="MVP 演示指标" tone="coral"><template #icon><MessageCircleIcon :size="20" /></template></StatCard>
+        <StatCard value="69" label="全国情绪关注指数" note="匿名化聚合数据" tone="teal"><template #icon><BarChart3Icon :size="20" /></template></StatCard>
+        <StatCard value="12,680" label="本月支持对话" note="多轮智能陪伴" tone="coral"><template #icon><MessageCircleIcon :size="20" /></template></StatCard>
         <StatCard value="大学生" label="当前高关注人群" note="焦虑与睡眠困扰" tone="gold"><template #icon><UsersIcon :size="20" /></template></StatCard>
         <StatCard value="4 维" label="平台数据标签" note="时间 · 地域 · 人群 · 情绪" tone="blue"><template #icon><DatabaseIcon :size="20" /></template></StatCard>
       </div>
@@ -57,7 +57,7 @@ const preview = getGalleryDataset({ year: 2025, region: '全国', population: '�
         </div>
         <div class="pain-list">
           <article><span>01</span><div><h3>识别</h3><p>从趋势、地域、人群与开放文本中识别值得关注的情绪信号。</p></div></article>
-          <article><span>02</span><div><h3>分析</h3><p>通过四维标签和联动图表理解风险背景，不把演示数据包装成诊断。</p></div></article>
+          <article><span>02</span><div><h3>分析</h3><p>通过四维标签和联动图表理解风险背景，坚持群体洞察与医学诊断的清晰边界。</p></div></article>
           <article><span>03</span><div><h3>干预</h3><p>以温和的心理支持建议和专业求助提示，提供低压力的下一步。</p></div></article>
         </div>
       </div>

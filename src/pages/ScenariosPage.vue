@@ -13,7 +13,7 @@ const scenarios = [
 <template>
   <section class="page scenarios-page">
     <div class="page-inner">
-      <SectionHeading eyebrow="应用场景" title="让心理支持进入更近的服务触点" description="MVP 面向机构演示与项目路演。所有场景都坚持辅助定位，不替代专业判断和紧急救助。" />
+      <SectionHeading eyebrow="应用场景" title="让心理支持进入更近的服务触点" description="面向学校、医院、社区与心理服务机构，所有场景都坚持辅助定位，不替代专业判断和紧急救助。" />
       <div class="scenario-grid">
         <article v-for="(item, index) in scenarios" :key="item.name" :data-accent="item.accent">
           <div><component :is="item.icon" :size="25" /></div><span>0{{ index + 1 }}</span><h2>{{ item.name }}</h2><p>{{ item.text }}</p>
@@ -21,15 +21,15 @@ const scenarios = [
       </div>
 
       <section class="product-forms">
-        <div><p class="section-kicker">推广形态</p><h2>从 Web 演示到多端服务能力</h2></div>
-        <div class="form-list"><article><Globe2Icon :size="22" /><h3>Web 平台</h3><p>当前 MVP 主载体</p></article><article><SmartphoneIcon :size="22" /><h3>微信小程序</h3><p>面向轻量触达</p></article><article><PuzzleIcon :size="22" /><h3>医疗平台插件</h3><p>作为辅助模块接入</p></article></div>
+        <div><p class="section-kicker">推广形态</p><h2>从 Web 平台连接更多服务触点</h2></div>
+        <div class="form-list"><article><Globe2Icon :size="22" /><h3>Web 平台</h3><p>完整产品体验</p></article><article><SmartphoneIcon :size="22" /><h3>微信小程序</h3><p>面向轻量触达</p></article><article><PuzzleIcon :size="22" /><h3>医疗平台插件</h3><p>作为辅助模块接入</p></article></div>
       </section>
 
       <section class="future-section">
-        <div class="future-head"><p class="section-kicker">未来展望</p><h2>从数据呈现走向多模态理解</h2></div>
+        <div class="future-head"><p class="section-kicker">能力延展</p><h2>从数据洞察走向多模态支持</h2></div>
         <div class="future-list">
           <article><BoxIcon :size="21" /><div><h3>3D 情绪地图</h3><p>以空间层级观察区域与人群变化。</p></div></article>
-          <article><MicIcon :size="21" /><div><h3>语音播报</h3><p>提供更低阅读负担的支持方式。</p></div></article>
+          <article><MicIcon :size="21" /><div><h3>实时语音陪伴</h3><p>用不同医生音色提供更低阅读负担的支持方式。</p></div></article>
           <article><ScanFaceIcon :size="21" /><div><h3>多模态情绪识别</h3><p>在明确授权与隐私边界内探索更多信号。</p></div></article>
           <article><ChartNoAxesCombinedIcon :size="21" /><div><h3>干预效果评估</h3><p>追踪行动反馈，形成可解释的服务改进闭环。</p></div></article>
         </div>
