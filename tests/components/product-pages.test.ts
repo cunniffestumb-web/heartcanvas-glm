@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 import { createPinia } from 'pinia'
 import { mount, RouterLinkStub, shallowMount } from '@vue/test-utils'
 import HomePage from '@/pages/HomePage.vue'
@@ -7,9 +7,15 @@ import DatabasePage from '@/pages/DatabasePage.vue'
 import TechnologyPage from '@/pages/TechnologyPage.vue'
 import ScenariosPage from '@/pages/ScenariosPage.vue'
 
+vi.mock('@/components/charts/TrendLineChart.vue', () => ({ default: { template: '<div />' } }))
+vi.mock('@/components/charts/ChinaRiskMap.vue', () => ({ default: { template: '<div />' } }))
+vi.mock('@/components/charts/PopulationRadarChart.vue', () => ({ default: { template: '<div />' } }))
+vi.mock('@/components/charts/EmotionStackedBar.vue', () => ({ default: { template: '<div />' } }))
+vi.mock('@/components/charts/KeywordCloud.vue', () => ({ default: { template: '<div />' } }))
+
 const global = {
   plugins: [createPinia()],
-  stubs: { RouterLink: RouterLinkStub },
+  stubs: { RouterLink: RouterLinkStub, AsyncComponentWrapper: true },
 }
 
 describe('product pages', () => {
@@ -39,7 +45,6 @@ describe('product pages', () => {
         },
       },
     })
-
     expect(wrapper.findAll('[data-chart-card]')).toHaveLength(5)
     expect(wrapper.text()).toContain('演示数据')
     expect(wrapper.findAll('select')).toHaveLength(4)

@@ -1,15 +1,22 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, defineAsyncComponent } from 'vue'
 import { ArrowRightIcon, InfoIcon, MapPinIcon, RotateCcwIcon } from '@lucide/vue'
 import FilterBar from '@/components/common/FilterBar.vue'
-import TrendLineChart from '@/components/charts/TrendLineChart.vue'
-import ChinaRiskMap from '@/components/charts/ChinaRiskMap.vue'
-import PopulationRadarChart from '@/components/charts/PopulationRadarChart.vue'
-import EmotionStackedBar from '@/components/charts/EmotionStackedBar.vue'
-import KeywordCloud from '@/components/charts/KeywordCloud.vue'
+import ChartSkeleton from '@/components/charts/ChartSkeleton.vue'
 import { baseRegions } from '@/services/statisticsService'
 import { useGalleryStore } from '@/stores/gallery'
 import type { GalleryFilters } from '@/types/statistics'
+
+const asyncChart = (loader: () => Promise<unknown>) => defineAsyncComponent({
+  loader: loader as () => Promise<{ default: never }>,
+  loadingComponent: ChartSkeleton,
+  delay: 0,
+})
+const TrendLineChart = asyncChart(() => import('@/components/charts/TrendLineChart.vue'))
+const ChinaRiskMap = asyncChart(() => import('@/components/charts/ChinaRiskMap.vue'))
+const PopulationRadarChart = asyncChart(() => import('@/components/charts/PopulationRadarChart.vue'))
+const EmotionStackedBar = asyncChart(() => import('@/components/charts/EmotionStackedBar.vue'))
+const KeywordCloud = asyncChart(() => import('@/components/charts/KeywordCloud.vue'))
 
 const store = useGalleryStore()
 const contextLabel = computed(() => `${store.filters.population} · ${store.filters.emotionType}`)

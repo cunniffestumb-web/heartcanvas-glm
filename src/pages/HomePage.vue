@@ -1,9 +1,15 @@
 <script setup lang="ts">
+import { defineAsyncComponent } from 'vue'
 import { ArrowRightIcon, BarChart3Icon, DatabaseIcon, MessageCircleIcon, ShieldCheckIcon, UsersIcon } from '@lucide/vue'
 import StatCard from '@/components/common/StatCard.vue'
-import TrendLineChart from '@/components/charts/TrendLineChart.vue'
+import ChartSkeleton from '@/components/charts/ChartSkeleton.vue'
 import { getGalleryDataset } from '@/services/statisticsService'
 
+const TrendLineChart = defineAsyncComponent({
+  loader: () => import('@/components/charts/TrendLineChart.vue'),
+  loadingComponent: ChartSkeleton,
+  delay: 0,
+})
 const preview = getGalleryDataset({ year: 2025, region: '全国', population: '大学生', emotionType: '焦虑' })
 </script>
 
