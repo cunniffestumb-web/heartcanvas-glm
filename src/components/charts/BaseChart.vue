@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
-import * as echarts from 'echarts'
 import type { EChartsOption } from 'echarts'
+import { echarts } from './echartsRuntime'
 
 const props = withDefaults(defineProps<{
   option: EChartsOption
@@ -14,7 +14,7 @@ const props = withDefaults(defineProps<{
 
 const emit = defineEmits<{ chartClick: [name: string] }>()
 const root = ref<HTMLElement>()
-let chart: echarts.ECharts | null = null
+let chart: ReturnType<typeof echarts.init> | null = null
 let observer: ResizeObserver | null = null
 
 function render() {

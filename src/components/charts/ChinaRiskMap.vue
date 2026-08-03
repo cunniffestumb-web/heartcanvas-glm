@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import * as echarts from 'echarts'
 import type { GeoJSONSourceInput } from 'echarts/types/src/coord/geo/geoTypes.js'
 import chinaGeoJson from '@/assets/china.geo.json'
 import type { RegionRecord } from '@/types/statistics'
 import BaseChart from './BaseChart.vue'
 import { buildMapOption, shortProvinceName } from './chartOptions'
+import { echarts } from './echartsRuntime'
 
 const props = defineProps<{ data: RegionRecord[] }>()
 const emit = defineEmits<{ select: [name: string] }>()
