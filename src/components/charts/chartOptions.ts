@@ -73,7 +73,8 @@ export function buildMapOption(regions: RegionRecord[]): EChartsOption {
       trigger: 'item',
       formatter: (params: unknown) => {
         const item = params as { name: string; value?: number }
-        return `<strong>${shortProvinceName(item.name)}</strong><br/>心理风险指数：${item.value ?? '暂无演示数据'}`
+        const value = Number.isFinite(item.value) ? item.value : '暂无数据'
+        return `<strong>${shortProvinceName(item.name)}</strong><br/>心理风险指数：${value}`
       },
     },
     visualMap: {
@@ -183,30 +184,32 @@ export function buildKeywordOption(rows: KeywordRecord[]): EChartsOption {
         return `<strong>${item.name}</strong><br/>关注热度：${item.value}`
       },
     },
+    grid: { left: 4, right: 4, top: 4, bottom: 4 },
     xAxis: { show: false, min: 0, max: 100 },
     yAxis: { show: false, min: 0, max: 100 },
     series: [{
-      type: 'graph',
-      layout: 'none',
-      coordinateSystem: 'cartesian2d',
-      roam: false,
-      symbolSize: 1,
+      type: 'scatter',
+      symbol: 'roundRect',
+      symbolSize: (value: [number, number, number]) => {
+        const ratio = (value[2] - min) / Math.max(1, max - min)
+        return [58 + ratio * 48, 30 + ratio * 16]
+      },
       itemStyle: { opacity: 0 },
-      emphasis: { scale: 1.08 },
+      emphasis: { scale: 1.12 },
+      labelLayout: { hideOverlap: false },
       data: rows.map((word, index) => {
         const ratio = (word.value - min) / Math.max(1, max - min)
-        const column = index % 4
-        const row = Math.floor(index / 4)
+        const column = index % 3
+        const row = Math.floor(index / 3)
         return {
           name: word.name,
-          value: word.value,
-          x: 14 + column * 25 + (row % 2) * 4,
-          y: 20 + row * 29 + (column % 2) * 7,
+          value: [16 + column * 34 + (row % 2) * 2, 13 + row * 24, word.value],
           label: {
             show: true,
             position: 'inside',
+            formatter: word.name,
             color: colors[index % colors.length],
-            fontSize: Math.round(13 + ratio * 18),
+            fontSize: Math.round(12 + ratio * 13),
             fontWeight: ratio > 0.6 ? 700 : 500,
           },
         }

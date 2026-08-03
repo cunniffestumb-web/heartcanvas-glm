@@ -1,5 +1,5 @@
 import * as echarts from 'echarts/core'
-import { BarChart, GraphChart, LineChart, MapChart, RadarChart } from 'echarts/charts'
+import { BarChart, LineChart, MapChart, RadarChart, ScatterChart } from 'echarts/charts'
 import {
   AriaComponent,
   GridComponent,
@@ -15,7 +15,7 @@ echarts.use([
   MapChart,
   RadarChart,
   BarChart,
-  GraphChart,
+  ScatterChart,
   GridComponent,
   LegendComponent,
   RadarComponent,

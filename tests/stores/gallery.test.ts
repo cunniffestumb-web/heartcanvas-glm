@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it } from 'vitest'
 import { createPinia, setActivePinia } from 'pinia'
-import { filterDatabaseRecords, getGalleryDataset } from '@/services/statisticsService'
+import { baseRegions, filterDatabaseRecords, getGalleryDataset } from '@/services/statisticsService'
 import { useGalleryStore } from '@/stores/gallery'
 
 describe('gallery data state', () => {
@@ -32,6 +32,11 @@ describe('gallery data state', () => {
 
     expect(students.trends.every((row) => Object.values(row).every(Number.isFinite))).toBe(true)
     expect(workers.trends.at(-1)?.stress).not.toBe(students.trends.at(-1)?.stress)
+  })
+
+  it('provides complete finite values for every province-level region', () => {
+    expect(baseRegions).toHaveLength(34)
+    expect(baseRegions.every((region) => Number.isFinite(region.riskIndex))).toBe(true)
   })
 
   it('filters database records across region, population, and emotion', () => {

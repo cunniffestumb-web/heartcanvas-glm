@@ -26,9 +26,12 @@ describe('chart option builders', () => {
 
   it('builds an interactive map scale for risk values', () => {
     const option = buildMapOption(dataset.regions)
+    const mapData = (option.series as Array<{ data: Array<{ value: number }> }>)[0].data
 
     expect(option.visualMap).toBeTruthy()
     expect(option.series).toMatchObject([{ type: 'map', map: 'china' }])
+    expect(mapData).toHaveLength(34)
+    expect(mapData.every((item) => Number.isFinite(item.value))).toBe(true)
   })
 
   it('builds five population risk indicators', () => {
@@ -45,12 +48,17 @@ describe('chart option builders', () => {
     expect((option.series as Array<{ stack?: string }>).every((series) => series.stack === 'total')).toBe(true)
   })
 
-  it('builds a deterministic graph-based keyword cloud', () => {
+  it('builds a deterministic keyword cloud with visible text nodes', () => {
     const option = buildKeywordOption(dataset.keywords)
-    const series = (option.series as Array<{ type: string; data: Array<{ label: { fontSize: number } }> }>)[0]
+    const series = (option.series as Array<{
+      type: string
+      symbolSize: (value: [number, number, number]) => [number, number]
+      data: Array<{ value: [number, number, number]; label: { show: boolean; fontSize: number } }>
+    }>)[0]
 
-    expect(series.type).toBe('graph')
+    expect(series.type).toBe('scatter')
     expect(series.data).toHaveLength(dataset.keywords.length)
+    expect(series.data.every((item) => item.label.show && series.symbolSize(item.value).every((size) => size > 10))).toBe(true)
     expect(series.data[0].label.fontSize).toBeGreaterThan(series.data.at(-1)!.label.fontSize)
   })
 })
