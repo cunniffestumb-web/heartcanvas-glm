@@ -4,7 +4,7 @@ import type { ChatMessage } from '@shared/chat'
 import CrisisNotice from './CrisisNotice.vue'
 import MessageBubble from './MessageBubble.vue'
 
-const props = defineProps<{ messages: ChatMessage[]; sending: boolean; crisis: boolean }>()
+const props = defineProps<{ messages: ChatMessage[]; sending: boolean; crisis: boolean; doctorName: string }>()
 const scrollArea = ref<HTMLElement>()
 
 watch(() => [props.messages.length, props.sending], async () => {
@@ -16,7 +16,7 @@ watch(() => [props.messages.length, props.sending], async () => {
 <template>
   <div ref="scrollArea" class="chat-window">
     <CrisisNotice v-if="crisis" />
-    <MessageBubble v-for="message in messages" :key="message.id" :message="message" />
+    <MessageBubble v-for="message in messages" :key="message.id" :message="message" :assistant-name="doctorName" />
     <div v-if="sending" class="typing" aria-label="正在分析"><i></i><i></i><i></i><span>正在分析</span></div>
   </div>
 </template>

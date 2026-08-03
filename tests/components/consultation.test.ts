@@ -15,6 +15,14 @@ describe('consultation controls', () => {
     expect(wrapper.emitted('send')?.[0]).toEqual(['我最近很焦虑'])
   })
 
+  it('opens the voice call experience from the composer', async () => {
+    const wrapper = mount(ChatInput, { props: { sending: false } })
+
+    await wrapper.get('button[aria-label="开始语音通话"]').trigger('click')
+
+    expect(wrapper.emitted('voice')).toHaveLength(1)
+  })
+
   it('shows immediate emergency and trusted-person guidance', () => {
     const wrapper = mount(CrisisNotice)
 
