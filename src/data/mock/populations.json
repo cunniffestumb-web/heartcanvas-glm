@@ -1,0 +1,6 @@
+[
+  { "group": "大学生", "anxiety": 78, "stress": 72, "sleep": 66, "social": 59, "stability": 52 },
+  { "group": "职场人", "anxiety": 70, "stress": 82, "sleep": 74, "social": 55, "stability": 57 },
+  { "group": "青少年", "anxiety": 64, "stress": 61, "sleep": 58, "social": 68, "stability": 60 },
+  { "group": "老年群体", "anxiety": 45, "stress": 42, "sleep": 63, "social": 50, "stability": 65 }
+]

@@ -1,0 +1,6 @@
+[
+  { "group": "青少年", "anxiety": 24, "depression": 15, "stress": 22, "loneliness": 17, "sleep": 22 },
+  { "group": "大学生", "anxiety": 28, "depression": 17, "stress": 25, "loneliness": 12, "sleep": 18 },
+  { "group": "职场人", "anxiety": 21, "depression": 13, "stress": 32, "loneliness": 10, "sleep": 24 },
+  { "group": "老年群体", "anxiety": 15, "depression": 18, "stress": 12, "loneliness": 29, "sleep": 26 }
+]

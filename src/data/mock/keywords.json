@@ -1,0 +1,14 @@
+[
+  { "name": "失眠", "value": 96, "category": "睡眠困扰" },
+  { "name": "考试", "value": 88, "category": "压力" },
+  { "name": "工作压力", "value": 84, "category": "压力" },
+  { "name": "社交焦虑", "value": 79, "category": "焦虑" },
+  { "name": "自我怀疑", "value": 73, "category": "抑郁" },
+  { "name": "亲密关系", "value": 68, "category": "人际关系" },
+  { "name": "孤独", "value": 65, "category": "孤独" },
+  { "name": "情绪低落", "value": 61, "category": "抑郁" },
+  { "name": "就业", "value": 56, "category": "压力" },
+  { "name": "拖延", "value": 50, "category": "焦虑" },
+  { "name": "家庭期待", "value": 46, "category": "人际关系" },
+  { "name": "疲惫", "value": 43, "category": "睡眠困扰" }
+]

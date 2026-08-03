@@ -1,0 +1,14 @@
+[
+  { "name": "北京", "riskIndex": 72, "level": "中高", "mainEmotion": "压力", "suggestion": "关注职场压力与睡眠困扰" },
+  { "name": "上海", "riskIndex": 69, "level": "中", "mainEmotion": "焦虑", "suggestion": "关注都市生活压力和社交支持" },
+  { "name": "广东", "riskIndex": 64, "level": "中", "mainEmotion": "焦虑", "suggestion": "关注青年群体就业压力" },
+  { "name": "四川", "riskIndex": 58, "level": "中低", "mainEmotion": "抑郁", "suggestion": "关注社区心理服务可及性" },
+  { "name": "浙江", "riskIndex": 66, "level": "中", "mainEmotion": "压力", "suggestion": "关注高强度工作与睡眠平衡" },
+  { "name": "江苏", "riskIndex": 63, "level": "中", "mainEmotion": "睡眠困扰", "suggestion": "关注职场人群睡眠质量" },
+  { "name": "山东", "riskIndex": 61, "level": "中", "mainEmotion": "焦虑", "suggestion": "加强青少年和家庭支持" },
+  { "name": "河南", "riskIndex": 65, "level": "中", "mainEmotion": "压力", "suggestion": "关注教育与就业转换压力" },
+  { "name": "湖北", "riskIndex": 60, "level": "中", "mainEmotion": "焦虑", "suggestion": "提升高校心理服务覆盖" },
+  { "name": "湖南", "riskIndex": 59, "level": "中低", "mainEmotion": "孤独", "suggestion": "关注青年社交支持网络" },
+  { "name": "陕西", "riskIndex": 57, "level": "中低", "mainEmotion": "压力", "suggestion": "关注大学生学业与就业压力" },
+  { "name": "辽宁", "riskIndex": 62, "level": "中", "mainEmotion": "抑郁", "suggestion": "加强社区情绪支持服务" }
+]

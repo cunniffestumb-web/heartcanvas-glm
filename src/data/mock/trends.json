@@ -1,0 +1,8 @@
+[
+  { "year": 2020, "anxiety": 62, "depression": 48, "stress": 57, "sleep": 43 },
+  { "year": 2021, "anxiety": 66, "depression": 51, "stress": 61, "sleep": 46 },
+  { "year": 2022, "anxiety": 70, "depression": 55, "stress": 64, "sleep": 50 },
+  { "year": 2023, "anxiety": 68, "depression": 54, "stress": 63, "sleep": 49 },
+  { "year": 2024, "anxiety": 72, "depression": 58, "stress": 67, "sleep": 53 },
+  { "year": 2025, "anxiety": 69, "depression": 56, "stress": 65, "sleep": 55 }
+]

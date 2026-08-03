@@ -1,0 +1,18 @@
+[
+  { "id": "XH-25001", "year": 2025, "region": "北京", "population": "大学生", "emotionType": "焦虑", "riskIndex": 74, "source": "匿名问卷", "sampleSize": 1280 },
+  { "id": "XH-25002", "year": 2025, "region": "北京", "population": "职场人", "emotionType": "压力", "riskIndex": 77, "source": "开放文本", "sampleSize": 960 },
+  { "id": "XH-25003", "year": 2025, "region": "上海", "population": "职场人", "emotionType": "睡眠困扰", "riskIndex": 71, "source": "匿名问卷", "sampleSize": 1110 },
+  { "id": "XH-25004", "year": 2025, "region": "广东", "population": "大学生", "emotionType": "焦虑", "riskIndex": 66, "source": "开放文本", "sampleSize": 1430 },
+  { "id": "XH-25005", "year": 2025, "region": "四川", "population": "老年群体", "emotionType": "孤独", "riskIndex": 59, "source": "社区问卷", "sampleSize": 620 },
+  { "id": "XH-25006", "year": 2025, "region": "浙江", "population": "职场人", "emotionType": "压力", "riskIndex": 69, "source": "匿名问卷", "sampleSize": 870 },
+  { "id": "XH-25007", "year": 2025, "region": "江苏", "population": "青少年", "emotionType": "睡眠困扰", "riskIndex": 64, "source": "校园问卷", "sampleSize": 1540 },
+  { "id": "XH-25008", "year": 2025, "region": "山东", "population": "青少年", "emotionType": "焦虑", "riskIndex": 62, "source": "校园问卷", "sampleSize": 1320 },
+  { "id": "XH-24009", "year": 2024, "region": "河南", "population": "大学生", "emotionType": "压力", "riskIndex": 68, "source": "匿名问卷", "sampleSize": 1190 },
+  { "id": "XH-24010", "year": 2024, "region": "湖北", "population": "大学生", "emotionType": "抑郁", "riskIndex": 61, "source": "开放文本", "sampleSize": 790 },
+  { "id": "XH-24011", "year": 2024, "region": "湖南", "population": "老年群体", "emotionType": "孤独", "riskIndex": 58, "source": "社区问卷", "sampleSize": 540 },
+  { "id": "XH-24012", "year": 2024, "region": "陕西", "population": "大学生", "emotionType": "焦虑", "riskIndex": 63, "source": "校园问卷", "sampleSize": 1020 },
+  { "id": "XH-23013", "year": 2023, "region": "辽宁", "population": "职场人", "emotionType": "抑郁", "riskIndex": 60, "source": "匿名问卷", "sampleSize": 680 },
+  { "id": "XH-23014", "year": 2023, "region": "上海", "population": "青少年", "emotionType": "焦虑", "riskIndex": 65, "source": "校园问卷", "sampleSize": 940 },
+  { "id": "XH-22015", "year": 2022, "region": "广东", "population": "职场人", "emotionType": "压力", "riskIndex": 64, "source": "开放文本", "sampleSize": 1050 },
+  { "id": "XH-21016", "year": 2021, "region": "北京", "population": "大学生", "emotionType": "焦虑", "riskIndex": 67, "source": "匿名问卷", "sampleSize": 860 }
+]
