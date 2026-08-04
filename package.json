@@ -10,7 +10,8 @@
     "test": "vitest run",
     "build:web": "vue-tsc --noEmit -p tsconfig.app.json && vite build",
     "build:server": "tsc -p tsconfig.node.json",
-    "build": "npm run build:web && npm run build:server"
+    "build": "npm run build:web && npm run build:server",
+    "build:sites": "node scripts/build-sites.mjs"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.115.0",
