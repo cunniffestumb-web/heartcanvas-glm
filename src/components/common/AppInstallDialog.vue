@@ -7,6 +7,7 @@ import { useAppInstall } from '@/composables/useAppInstall'
 
 const emit = defineEmits<{ close: [] }>()
 const route = useRoute()
+const iconUrl = `${import.meta.env.BASE_URL}icons/xinhui.svg`
 const { canInstall, installed, installing, installMessage, install } = useAppInstall()
 const isAppRoute = computed(() => route.path === '/app' || route.path.startsWith('/app/'))
 const device = ref<'mobile' | 'desktop'>(typeof window !== 'undefined' && window.matchMedia('(min-width: 768px)').matches ? 'desktop' : 'mobile')
@@ -22,7 +23,7 @@ function selectDevice(event: KeyboardEvent) {
 <template>
   <OverlayPanel title="让心绘陪在身边" @close="emit('close')">
     <div class="install-intro">
-      <img src="/icons/xinhui.svg" alt="" width="66" height="66" />
+      <img :src="iconUrl" alt="" width="66" height="66" />
       <div>
         <h3>给心情，留一个小小的入口</h3>
         <p>把心绘网页版添加到桌面或手机主屏幕，下次轻轻一点，就能回来。</p>

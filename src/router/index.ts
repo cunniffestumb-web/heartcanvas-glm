@@ -42,7 +42,7 @@ export const routes: RouteRecordRaw[] = [
 ]
 
 const router = createRouter({
-  history: createWebHistory(),
+  history: createWebHistory(import.meta.env.BASE_URL),
   routes,
   scrollBehavior: (to, _from, savedPosition) =>
     savedPosition || (to.hash ? { el: to.hash, top: 92 } : { top: 0 }),
