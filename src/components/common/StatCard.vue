@@ -1,5 +1,10 @@
 <script setup lang="ts">
-defineProps<{ value: string; label: string; note?: string; tone?: 'teal' | 'coral' | 'gold' | 'blue' }>()
+defineProps<{
+  value: string
+  label: string
+  note?: string
+  tone?: 'teal' | 'coral' | 'gold' | 'blue'
+}>()
 </script>
 
 <template>
@@ -26,11 +31,42 @@ defineProps<{ value: string; label: string; note?: string; tone?: 'teal' | 'cora
   background: var(--surface);
   box-shadow: var(--shadow-sm);
 }
-.stat-icon { width: 38px; height: 38px; display: grid; place-items: center; border-radius: 7px; color: var(--teal); background: var(--teal-soft); }
-.stat-card[data-tone="coral"] .stat-icon { color: var(--coral); background: var(--coral-soft); }
-.stat-card[data-tone="gold"] .stat-icon { color: var(--gold); background: var(--gold-soft); }
-.stat-card[data-tone="blue"] .stat-icon { color: var(--blue); background: #e2ebf3; }
-strong { display: block; margin-bottom: 4px; font-size: 27px; line-height: 1; }
-p { margin: 0; color: var(--ink); font-size: 13px; }
-small { display: block; margin-top: 7px; color: var(--ink-soft); font-size: 11px; }
+.stat-icon {
+  width: 38px;
+  height: 38px;
+  display: grid;
+  place-items: center;
+  border-radius: 7px;
+  color: var(--teal);
+  background: var(--teal-soft);
+}
+.stat-card[data-tone='coral'] .stat-icon {
+  color: var(--coral);
+  background: var(--coral-soft);
+}
+.stat-card[data-tone='gold'] .stat-icon {
+  color: var(--gold);
+  background: var(--gold-soft);
+}
+.stat-card[data-tone='blue'] .stat-icon {
+  color: var(--blue);
+  background: #e2ebf3;
+}
+strong {
+  display: block;
+  margin-bottom: 4px;
+  font-size: 27px;
+  line-height: 1;
+}
+p {
+  margin: 0;
+  color: var(--ink);
+  font-size: 13px;
+}
+small {
+  display: block;
+  margin-top: 7px;
+  color: var(--ink-soft);
+  font-size: 12px;
+}
 </style>

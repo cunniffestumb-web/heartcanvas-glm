@@ -1,29 +1,31 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import { BookOpenCheckIcon, RotateCcwIcon, SearchIcon, ShieldCheckIcon } from '@lucide/vue'
+import { ArrowLeftIcon, ArrowRightIcon, BookOpenIcon, SearchIcon, SlidersHorizontalIcon } from '@lucide/vue'
 import SectionHeading from '@/components/common/SectionHeading.vue'
 import CaseCard from '@/components/cases/CaseCard.vue'
 import { cases } from '@/data/cases'
 import { filterCases } from '@/services/caseService'
-
+import '@/styles/application-library.css'
+const props = withDefaults(defineProps<{ application?: boolean }>(), { application: false })
+const basePath = computed(() => props.application ? '/app/library' : '/cases')
 const query = ref('')
 const category = ref('')
 const sourceType = ref('')
 const caseNature = ref('')
-const loading = ref(false)
-const loadError = ref('')
-
 const categories = [...new Set(cases.map((item) => item.category))]
 const sourceTypes = [...new Set(cases.map((item) => item.sourceType))]
 const caseNatures = [...new Set(cases.map((item) => item.caseNature))]
-const filteredCases = computed(() => filterCases(cases, {
-  query: query.value,
-  category: category.value,
-  sourceType: sourceType.value,
-  caseNature: caseNature.value,
-}))
-const hasFilters = computed(() => Boolean(query.value || category.value || sourceType.value || caseNature.value))
-
+const filteredCases = computed(() =>
+  filterCases(cases, {
+    query: query.value,
+    category: category.value,
+    sourceType: sourceType.value,
+    caseNature: caseNature.value,
+  }),
+)
+const hasFilters = computed(() =>
+  Boolean(query.value || category.value || sourceType.value || caseNature.value),
+)
 function clearFilters() {
   query.value = ''
   category.value = ''
@@ -31,74 +33,267 @@ function clearFilters() {
   caseNature.value = ''
 }
 </script>
-
 <template>
-  <section class="page cases-page">
+  <section class="page cases-page" :class="{ 'application-library': application }">
     <div class="page-inner">
+      <RouterLink v-if="application" class="library-back-link" to="/app">
+        <ArrowLeftIcon :size="16" aria-hidden="true" />返回今天
+      </RouterLink>
       <SectionHeading
-        eyebrow="案例中心"
-        title="从公开资料理解心理困扰与求助"
-        description="所有案例均来自政府报告或同行评审资料，经过再次匿名化与教育性改写。案例用于科普，不替代诊断和个体化专业建议。"
+        eyebrow="公开案例中心"
+        title="读一段经历，多一个理解的视角"
+        description="从公开研究和机构资料认识心理困扰与求助。每个案例保留来源、局限与核验说明，帮助你理解不同的经历。"
       />
-
-      <div class="trust-strip" aria-label="案例收录标准">
-        <span><BookOpenCheckIcon :size="18" aria-hidden="true" />8 个公开资料案例</span>
-        <span><ShieldCheckIcon :size="18" aria-hidden="true" />仅收录 A 级来源</span>
-        <span>检索核验日期：2026-08-04</span>
+      <div class="library-note">
+        <BookOpenIcon :size="20" /><span
+          >{{ cases.length }} 个公开资料案例 · 教育性改写，仅用于科普</span
+        >
       </div>
-
-      <section class="filter-band" aria-label="案例筛选">
-        <label class="search-field">
-          <span>关键词搜索</span>
-          <span class="input-wrap"><SearchIcon :size="17" aria-hidden="true" /><input v-model="query" data-case-search type="search" placeholder="搜索主题、人物或来源" /></span>
-        </label>
-        <label><span>主题</span><select v-model="category"><option value="">全部主题</option><option v-for="item in categories" :key="item" :value="item">{{ item }}</option></select></label>
-        <label><span>来源类型</span><select v-model="sourceType"><option value="">全部来源</option><option v-for="item in sourceTypes" :key="item" :value="item">{{ item }}</option></select></label>
-        <label><span>案例性质</span><select v-model="caseNature"><option value="">全部性质</option><option v-for="item in caseNatures" :key="item" :value="item">{{ item }}</option></select></label>
-        <button type="button" :disabled="!hasFilters" @click="clearFilters"><RotateCcwIcon :size="16" aria-hidden="true" />清除筛选</button>
-      </section>
-
-      <div class="results-head"><p>找到 <strong>{{ filteredCases.length }}</strong> 个案例</p><p>条件核验案例会在详情页标明待核实事项</p></div>
-
-      <div v-if="loading" class="state-panel" aria-live="polite"><span class="loader" />正在加载案例…</div>
-      <div v-else-if="loadError" class="state-panel error" role="alert"><h2>案例暂时无法加载</h2><p>{{ loadError }}</p></div>
-      <div v-else-if="filteredCases.length" class="case-grid">
-        <CaseCard v-for="item in filteredCases" :key="item.id" :item="item" />
+      <div class="search-box">
+        <SearchIcon :size="21" /><input
+          v-model="query"
+          data-case-search
+          type="search"
+          aria-label="搜索案例"
+          placeholder="搜索困扰、人物或来源…"
+        />
+      </div>
+      <div class="topic-filters" aria-label="案例主题">
+        <button type="button" :class="{ active: !category }" @click="category = ''">全部主题</button
+        ><button
+          v-for="item in categories"
+          :key="item"
+          type="button"
+          :class="{ active: category === item }"
+          @click="category = item"
+        >
+          {{ item }}
+        </button>
+      </div>
+      <details class="advanced-filters">
+        <summary>
+          <SlidersHorizontalIcon :size="17" />高级筛选<span
+            v-if="sourceType || caseNature"
+            class="filter-active"
+            >已筛选</span
+          >
+        </summary>
+        <div>
+          <label
+            >主题<select v-model="category">
+              <option value="">全部主题</option>
+              <option v-for="item in categories" :key="item" :value="item">{{ item }}</option>
+            </select></label
+          ><label
+            >来源类型<select v-model="sourceType">
+              <option value="">全部来源</option>
+              <option v-for="item in sourceTypes" :key="item" :value="item">{{ item }}</option>
+            </select></label
+          ><label
+            >案例性质<select v-model="caseNature">
+              <option value="">全部性质</option>
+              <option v-for="item in caseNatures" :key="item" :value="item">{{ item }}</option>
+            </select></label
+          >
+        </div>
+      </details>
+      <div class="results-head">
+        <p>
+          找到 <strong>{{ filteredCases.length }}</strong> 个案例
+        </p>
+        <button v-if="hasFilters" type="button" @click="clearFilters">清除筛选</button
+        ><span v-else>条件核验内容在详情中标明</span>
+      </div>
+      <div v-if="filteredCases.length" class="case-grid">
+        <CaseCard v-for="item in filteredCases" :key="item.id" :item="item" :base-path="basePath" />
       </div>
       <div v-else class="state-panel empty">
-        <SearchIcon :size="28" aria-hidden="true" />
+        <SearchIcon :size="28" />
         <h2>没有找到符合条件的案例</h2>
-        <p>换一个关键词或清除筛选条件后再试。</p>
-        <button type="button" @click="clearFilters"><RotateCcwIcon :size="16" aria-hidden="true" />清除筛选</button>
+        <p>换一个关键词，或清除筛选后再试。</p>
+        <button class="button" type="button" @click="clearFilters">清除筛选</button>
+      </div>
+      <div class="library-footer">
+        <p>阅读中想起了自己的经历？</p>
+        <RouterLink class="text-link" :to="application ? '/app/chat' : '/consultation'"
+          >找一个自在的空间聊聊 <ArrowRightIcon :size="18"
+        /></RouterLink>
       </div>
     </div>
   </section>
 </template>
-
 <style scoped>
-.trust-strip { display: flex; flex-wrap: wrap; gap: 22px; margin-top: 30px; padding: 18px 0; border-block: 1px solid var(--line); color: var(--ink-soft); font-size: 12px; }
-.trust-strip span { display: inline-flex; align-items: center; gap: 7px; }
-.trust-strip svg { color: var(--teal); }
-.filter-band { display: grid; grid-template-columns: minmax(230px, 1.4fr) repeat(3, minmax(130px, .7fr)) auto; gap: 12px; align-items: end; margin: 30px 0 18px; padding: 20px; border: 1px solid var(--line); background: var(--surface-muted); }
-label { display: grid; gap: 7px; min-width: 0; }
-label > span:first-child { color: var(--ink-soft); font-size: 11px; font-weight: 700; }
-input, select { width: 100%; height: 42px; border: 1px solid var(--line); border-radius: 5px; color: var(--ink); background: var(--surface); outline: none; }
-input:focus, select:focus { border-color: var(--teal); box-shadow: 0 0 0 3px rgb(21 122 115 / 12%); }
-input { padding: 0 12px 0 38px; }
-select { padding: 0 32px 0 11px; }
-.input-wrap { position: relative; display: block; }
-.input-wrap svg { position: absolute; top: 13px; left: 12px; z-index: 1; color: var(--ink-soft); }
-button { min-height: 42px; display: inline-flex; align-items: center; justify-content: center; gap: 7px; padding: 0 14px; border: 1px solid var(--teal); border-radius: 5px; color: white; background: var(--teal); cursor: pointer; font-size: 12px; font-weight: 700; }
-button:disabled { border-color: var(--line); color: var(--ink-soft); background: var(--surface); cursor: default; opacity: .65; }
-.results-head { display: flex; justify-content: space-between; gap: 20px; margin-bottom: 14px; color: var(--ink-soft); font-size: 11px; }
-.results-head p { margin: 0; }.results-head strong { color: var(--teal-dark); }
-.case-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
-.state-panel { min-height: 300px; display: grid; place-items: center; align-content: center; gap: 10px; padding: 40px; border: 1px dashed var(--line); background: var(--surface); text-align: center; }
-.state-panel h2, .state-panel p { margin: 0; }.state-panel h2 { font-size: 18px; }.state-panel p { color: var(--ink-soft); font-size: 12px; }
-.state-panel svg { color: var(--teal); }.state-panel button { margin-top: 8px; }
-.loader { width: 26px; height: 26px; border: 3px solid var(--teal-soft); border-top-color: var(--teal); border-radius: 50%; animation: spin 700ms linear infinite; }
-.error { border-color: rgb(185 64 64 / 35%); color: var(--danger); }
-@keyframes spin { to { transform: rotate(360deg); } }
-@media (max-width: 1040px) { .filter-band { grid-template-columns: repeat(2, minmax(0, 1fr)); }.filter-band button { align-self: end; }.case-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-@media (max-width: 620px) { .filter-band, .case-grid { grid-template-columns: 1fr; }.results-head { align-items: flex-start; flex-direction: column; }.trust-strip { display: grid; gap: 10px; } }
+.library-note {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: -8px 0 28px;
+  color: var(--ink-soft);
+  font-size: 12px;
+}
+.library-note svg {
+  color: var(--teal);
+  flex-shrink: 0;
+}
+.search-box {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 58px;
+  padding: 8px 18px;
+  border: 1px solid #cbdacf;
+  border-radius: 13px;
+  background: var(--surface);
+}
+.search-box svg {
+  color: var(--teal);
+  flex-shrink: 0;
+}
+.search-box input {
+  width: 100%;
+  min-height: 44px;
+  padding: 6px 0;
+  border: 0;
+  outline: none;
+  background: transparent;
+  font-size: 16px;
+}
+.search-box:focus-within {
+  box-shadow: 0 0 0 2px var(--teal-soft);
+}
+.topic-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 20px 0 12px;
+}
+.topic-filters button {
+  min-height: 44px;
+  padding: 8px 15px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  color: var(--ink-soft);
+  background: transparent;
+  font-size: 14px;
+}
+.topic-filters button.active {
+  color: var(--teal-dark);
+  border-color: #c4d9cc;
+  background: var(--teal-soft);
+}
+.advanced-filters {
+  border-bottom: 1px solid var(--line);
+}
+.advanced-filters summary {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 48px;
+  color: var(--ink-soft);
+  font-size: 12px;
+  list-style: none;
+}
+.filter-active {
+  margin-left: auto;
+  color: var(--teal);
+}
+.advanced-filters > div {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  padding: 12px 0 22px;
+}
+label {
+  display: grid;
+  gap: 7px;
+  color: var(--ink-soft);
+  font-size: 12px;
+}
+select {
+  width: 100%;
+  min-height: 44px;
+  padding: 8px 10px;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  font-size: 16px;
+}
+.results-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 18px 0;
+  color: var(--ink-soft);
+  font-size: 12px;
+}
+.results-head p {
+  margin: 0;
+}
+.results-head button {
+  min-height: 44px;
+  padding: 7px 12px;
+  border: 0;
+  color: var(--teal);
+  background: var(--teal-soft);
+  font-size: 12px;
+}
+.case-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 22px;
+}
+.state-panel {
+  padding: 48px 20px;
+  text-align: center;
+  color: var(--ink-soft);
+}
+.state-panel svg {
+  color: var(--teal);
+}
+.state-panel h2 {
+  font-size: 24px;
+}
+.library-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  margin-top: 38px;
+  padding: 22px 0;
+  border-top: 1px solid var(--line);
+}
+.library-footer p {
+  margin: 0;
+  font-size: 16px;
+}
+@media (max-width: 1023px) {
+  .case-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 600px) {
+  .case-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  .advanced-filters > div {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  .results-head > span {
+    max-width: 140px;
+    text-align: right;
+  }
+  .topic-filters {
+    gap: 6px;
+  }
+  .topic-filters button {
+    padding-inline: 11px;
+  }
+  .library-footer {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 5px;
+  }
+}
 </style>

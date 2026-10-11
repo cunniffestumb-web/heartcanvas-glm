@@ -1,4 +1,10 @@
-import type { ChatContext, ChatPersona, ChatRequest, RiskLevel, SupportMessage } from '../shared/chat'
+import type {
+  ChatContext,
+  ChatPersona,
+  ChatRequest,
+  RiskLevel,
+  SupportMessage,
+} from '../shared/chat'
 import { createMockReply } from '../server/mockReply'
 import { analyzeEmotion, detectCrisis } from '../server/safety'
 
@@ -23,8 +29,8 @@ const baseSystemPrompt = `你是“心绘 GLM”平台中的心理支持助手�
 4. 使用中文，语气稳定、尊重，不过度承诺。
 5. 只输出 JSON，不要 Markdown。结构必须是：{"content":"完整支持回复","emotion":"主要情绪","riskLevel":"低或中或高","keywords":["关键词"]}。`
 
-function json(data: unknown, status = 200) {
-  return new Response(JSON.stringify(data), { status, headers: jsonHeaders })
+function json(data: unknown, status = 200, headers: Record<string, string> = {}) {
+  return new Response(JSON.stringify(data), { status, headers: { ...jsonHeaders, ...headers } })
 }
 
 function getLatestUserMessage(body: unknown): string | null {
@@ -38,7 +44,10 @@ function getLatestUserMessage(body: unknown): string | null {
 }
 
 function cleanPromptValue(value: string | undefined, maxLength: number) {
-  return (value || '').replace(/[\u0000-\u001f\u007f]/gu, ' ').trim().slice(0, maxLength)
+  return (value || '')
+    .replace(/[\u0000-\u001f\u007f]/gu, ' ')
+    .trim()
+    .slice(0, maxLength)
 }
 
 function buildSystemPrompt(persona?: ChatPersona, context?: ChatContext) {
@@ -53,17 +62,23 @@ function buildSystemPrompt(persona?: ChatPersona, context?: ChatContext) {
 
 function parseProviderText(raw: string, sourceText: string): SupportMessage {
   const insight = analyzeEmotion(sourceText)
-  const cleaned = raw.trim().replace(/^```(?:json)?\s*/iu, '').replace(/\s*```$/u, '')
+  const cleaned = raw
+    .trim()
+    .replace(/^```(?:json)?\s*/iu, '')
+    .replace(/\s*```$/u, '')
 
   try {
     const parsed = JSON.parse(cleaned) as Partial<SupportMessage>
     const riskLevel: RiskLevel = ['低', '中', '高'].includes(parsed.riskLevel || '')
-      ? parsed.riskLevel as RiskLevel
+      ? (parsed.riskLevel as RiskLevel)
       : insight.riskLevel
     if (typeof parsed.content === 'string' && parsed.content.trim()) {
       return {
         content: parsed.content.trim(),
-        emotion: typeof parsed.emotion === 'string' && parsed.emotion.trim() ? parsed.emotion.trim() : insight.emotion,
+        emotion:
+          typeof parsed.emotion === 'string' && parsed.emotion.trim()
+            ? parsed.emotion.trim()
+            : insight.emotion,
         riskLevel,
         keywords: Array.isArray(parsed.keywords)
           ? parsed.keywords.filter((item): item is string => typeof item === 'string').slice(0, 5)
@@ -78,7 +93,10 @@ function parseProviderText(raw: string, sourceText: string): SupportMessage {
 }
 
 async function requestProvider(body: ChatRequest, env: WorkerEnv, latestUserText: string) {
-  const baseUrl = (env.ANTHROPIC_BASE_URL?.trim() || 'https://api.deepseek.com/anthropic').replace(/\/+$/u, '')
+  const baseUrl = (env.ANTHROPIC_BASE_URL?.trim() || 'https://api.deepseek.com/anthropic').replace(
+    /\/+$/u,
+    '',
+  )
   const response = await fetch(`${baseUrl}/v1/messages`, {
     method: 'POST',
     headers: {
@@ -97,7 +115,7 @@ async function requestProvider(body: ChatRequest, env: WorkerEnv, latestUserText
     signal: AbortSignal.timeout(20_000),
   })
   if (!response.ok) throw new Error(`Provider error ${response.status}`)
-  const result = await response.json() as { content?: Array<{ type?: string; text?: string }> }
+  const result = (await response.json()) as { content?: Array<{ type?: string; text?: string }> }
   const raw = result.content
     ?.filter((block) => block.type === 'text' && typeof block.text === 'string')
     .map((block) => block.text)
@@ -130,7 +148,7 @@ async function handleChat(request: Request, env: WorkerEnv) {
     const message = await requestProvider(body, env, latestUserText)
     return json({ mode: 'online', message })
   } catch {
-    return json(createMockReply(latestUserText))
+    return json(createMockReply(latestUserText), 200, { 'X-Chat-Fallback': 'upstream' })
   }
 }
 

@@ -1,10 +1,11 @@
-import { describe, expect, it } from 'vitest'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 import { mount } from '@vue/test-utils'
 import ChatInput from '@/components/consultation/ChatInput.vue'
 import CrisisNotice from '@/components/consultation/CrisisNotice.vue'
 import ModeBadge from '@/components/common/ModeBadge.vue'
 
 describe('consultation controls', () => {
+  afterEach(() => vi.restoreAllMocks())
   it('prevents empty messages and emits trimmed content', async () => {
     const wrapper = mount(ChatInput, { props: { sending: false } })
     const button = wrapper.get('button[type="submit"]')
@@ -36,8 +37,35 @@ describe('consultation controls', () => {
     const online = mount(ModeBadge, { props: { mode: 'online' } })
     const fallback = mount(ModeBadge, { props: { mode: 'mock' } })
 
-    expect(online.text()).toContain('智能服务已连接')
-    expect(fallback.text()).toContain('基础支持可用')
+    expect(online.text()).toContain('在线回应')
+    expect(fallback.text()).toContain('基础支持')
     expect(`${online.text()} ${fallback.text()}`).not.toMatch(/mock|演示|模式/iu)
+  })
+
+  it('does not send during Chinese composition or Shift+Enter', async () => {
+    vi.spyOn(window, 'matchMedia').mockReturnValue({ matches: true } as MediaQueryList)
+    const wrapper = mount(ChatInput, { props: { sending: false } })
+    const input = wrapper.get('textarea')
+    await input.setValue('还在输入中文')
+    await input.trigger('compositionstart')
+    await input.trigger('keydown', { key: 'Enter', isComposing: true })
+    expect(wrapper.emitted('send')).toBeUndefined()
+    await input.trigger('compositionend')
+    await input.trigger('keydown', { key: 'Enter', shiftKey: true })
+    expect(wrapper.emitted('send')).toBeUndefined()
+    await input.trigger('keydown', { key: 'Enter' })
+    expect(wrapper.emitted('send')?.[0]).toEqual(['还在输入中文'])
+  })
+
+  it('keeps mobile Enter for a newline and supports cancelling a pending reply', async () => {
+    vi.spyOn(window, 'matchMedia').mockReturnValue({ matches: false } as MediaQueryList)
+    const wrapper = mount(ChatInput, { props: { sending: false } })
+    await wrapper.get('textarea').setValue('手机上的感受')
+    await wrapper.get('textarea').trigger('keydown', { key: 'Enter' })
+    expect(wrapper.emitted('send')).toBeUndefined()
+    await wrapper.setProps({ sending: true })
+    await wrapper.get('[aria-label="停止回应"]').trigger('click')
+    expect(wrapper.emitted('cancel')).toHaveLength(1)
+    expect(wrapper.find('button[type="submit"]').exists()).toBe(false)
   })
 })

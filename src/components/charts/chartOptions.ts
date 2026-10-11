@@ -9,7 +9,7 @@ import type {
 
 const palette = ['#157a73', '#d97062', '#4b78a7', '#b48730', '#7b6fa6']
 const axisLine = { lineStyle: { color: '#d9ddd7' } }
-const axisLabel = { color: '#687673', fontSize: 11 }
+const axisLabel = { color: '#687673', fontSize: 12 }
 const splitLine = { lineStyle: { color: '#e9ebe7', type: 'dashed' as const } }
 
 const tooltip = {
@@ -21,8 +21,7 @@ const tooltip = {
 }
 
 export function shortProvinceName(name: string): string {
-  return name
-    .replace(/维吾尔自治区|壮族自治区|回族自治区|特别行政区|自治区|省|市$/u, '')
+  return name.replace(/维吾尔自治区|壮族自治区|回族自治区|特别行政区|自治区|省|市$/u, '')
 }
 
 export function buildTrendOption(rows: TrendRow[], context: string): EChartsOption {
@@ -41,14 +40,25 @@ export function buildTrendOption(rows: TrendRow[], context: string): EChartsOpti
       ...tooltip,
       trigger: 'axis',
       formatter: (params: unknown) => {
-        const items = params as Array<{ axisValue: string; marker: string; seriesName: string; value: number }>
+        const items = params as Array<{
+          axisValue: string
+          marker: string
+          seriesName: string
+          value: number
+        }>
         if (!items.length) return ''
         return `<strong>${items[0].axisValue} · ${context}</strong><br/>${items.map((item) => `${item.marker}${item.seriesName}：${item.value} 指数`).join('<br/>')}`
       },
     },
     legend: { top: 0, right: 0, itemWidth: 10, itemHeight: 6, textStyle: axisLabel },
     grid: { left: 10, right: 12, top: 44, bottom: 8, containLabel: true },
-    xAxis: { type: 'category', boundaryGap: false, data: rows.map((row) => row.year), axisLine, axisLabel },
+    xAxis: {
+      type: 'category',
+      boundaryGap: false,
+      data: rows.map((row) => row.year),
+      axisLine,
+      axisLabel,
+    },
     yAxis: { type: 'value', min: 20, max: 100, axisLine: { show: false }, axisLabel, splitLine },
     series: definitions.map(([name, key], index) => ({
       name,
@@ -64,7 +74,7 @@ export function buildTrendOption(rows: TrendRow[], context: string): EChartsOpti
   }
 }
 
-export function buildMapOption(regions: RegionRecord[]): EChartsOption {
+export function buildMapOption(regions: RegionRecord[], selectedRegion?: string): EChartsOption {
   const values = regions.map((region) => region.riskIndex)
   return {
     animationDuration: 900,
@@ -74,7 +84,7 @@ export function buildMapOption(regions: RegionRecord[]): EChartsOption {
       formatter: (params: unknown) => {
         const item = params as { name: string; value?: number }
         const value = Number.isFinite(item.value) ? item.value : '暂无数据'
-        return `<strong>${shortProvinceName(item.name)}</strong><br/>心理风险指数：${value}`
+        return `<strong>${shortProvinceName(item.name)}</strong><br/>心理关注指数：${value}`
       },
     },
     visualMap: {
@@ -87,27 +97,39 @@ export function buildMapOption(regions: RegionRecord[]): EChartsOption {
       textStyle: axisLabel,
       inRange: { color: ['#dcefeb', '#79b8ad', '#d97062'] },
     },
-    series: [{
-      type: 'map',
-      map: 'china',
-      roam: false,
-      top: 10,
-      bottom: 8,
-      label: { show: false },
-      itemStyle: { areaColor: '#e8ece7', borderColor: '#fffdf9', borderWidth: 1 },
-      emphasis: {
-        label: { show: true, color: '#172624', fontSize: 11 },
-        itemStyle: { areaColor: '#f0c3b8', borderColor: '#d97062', borderWidth: 1.5 },
+    series: [
+      {
+        type: 'map',
+        map: 'china',
+        roam: false,
+        top: 10,
+        bottom: 8,
+        label: { show: false },
+        itemStyle: { areaColor: '#e8ece7', borderColor: '#fffdf9', borderWidth: 1 },
+        emphasis: {
+          label: { show: true, color: '#172624', fontSize: 12 },
+          itemStyle: { areaColor: '#f0c3b8', borderColor: '#d97062', borderWidth: 1.5 },
+        },
+        selectedMode: 'single',
+        select: {
+          itemStyle: { areaColor: '#c97967' },
+          label: { show: true, color: '#fff', fontSize: 12 },
+        },
+        data: regions.map((region) => ({
+          name: region.name,
+          value: region.riskIndex,
+          selected: region.name === selectedRegion,
+        })),
+        nameProperty: 'shortName',
       },
-      select: { itemStyle: { areaColor: '#d97062' }, label: { color: '#fff' } },
-      data: regions.map((region) => ({ name: region.name, value: region.riskIndex })),
-      nameProperty: 'shortName',
-    }],
+    ],
   }
 }
 
 export function buildRadarOption(rows: PopulationRecord[], selectedGroup: string): EChartsOption {
-  const ordered = [...rows].sort((a, b) => Number(b.group === selectedGroup) - Number(a.group === selectedGroup))
+  const ordered = [...rows].sort(
+    (a, b) => Number(b.group === selectedGroup) - Number(a.group === selectedGroup),
+  )
   return {
     color: palette,
     animationDurationUpdate: 700,
@@ -124,21 +146,23 @@ export function buildRadarOption(rows: PopulationRecord[], selectedGroup: string
         { name: '社交支持不足', max: 100 },
         { name: '稳定性风险', max: 100 },
       ],
-      axisName: { color: '#52615f', fontSize: 11 },
+      axisName: { color: '#52615f', fontSize: 12 },
       splitArea: { areaStyle: { color: ['#fffdf9', '#f4f6f2'] } },
       splitLine: { lineStyle: { color: '#dfe4de' } },
       axisLine: { lineStyle: { color: '#dfe4de' } },
     },
-    series: [{
-      type: 'radar',
-      symbolSize: 5,
-      data: ordered.map((row) => ({
-        name: row.group,
-        value: [row.anxiety, row.stress, row.sleep, row.social, row.stability],
-        areaStyle: { opacity: row.group === selectedGroup ? 0.22 : 0.04 },
-        lineStyle: { width: row.group === selectedGroup ? 3 : 1 },
-      })),
-    }],
+    series: [
+      {
+        type: 'radar',
+        symbolSize: 5,
+        data: ordered.map((row) => ({
+          name: row.group,
+          value: [row.anxiety, row.stress, row.sleep, row.social, row.stability],
+          areaStyle: { opacity: row.group === selectedGroup ? 0.22 : 0.04 },
+          lineStyle: { width: row.group === selectedGroup ? 3 : 1 },
+        })),
+      },
+    ],
   }
 }
 
@@ -187,33 +211,35 @@ export function buildKeywordOption(rows: KeywordRecord[]): EChartsOption {
     grid: { left: 4, right: 4, top: 4, bottom: 4 },
     xAxis: { show: false, min: 0, max: 100 },
     yAxis: { show: false, min: 0, max: 100 },
-    series: [{
-      type: 'scatter',
-      symbol: 'roundRect',
-      symbolSize: (value: [number, number, number]) => {
-        const ratio = (value[2] - min) / Math.max(1, max - min)
-        return [58 + ratio * 48, 30 + ratio * 16]
+    series: [
+      {
+        type: 'scatter',
+        symbol: 'roundRect',
+        symbolSize: (value: [number, number, number]) => {
+          const ratio = (value[2] - min) / Math.max(1, max - min)
+          return [58 + ratio * 48, 30 + ratio * 16]
+        },
+        itemStyle: { color: 'rgba(0,0,0,0)' },
+        emphasis: { scale: 1.12 },
+        labelLayout: { hideOverlap: false },
+        data: rows.map((word, index) => {
+          const ratio = (word.value - min) / Math.max(1, max - min)
+          const column = index % 3
+          const row = Math.floor(index / 3)
+          return {
+            name: word.name,
+            value: [16 + column * 34 + (row % 2) * 2, 13 + row * 24, word.value],
+            label: {
+              show: true,
+              position: 'inside',
+              formatter: word.name,
+              color: colors[index % colors.length],
+              fontSize: Math.round(12 + ratio * 13),
+              fontWeight: ratio > 0.6 ? 700 : 500,
+            },
+          }
+        }),
       },
-      itemStyle: { color: 'rgba(0,0,0,0)' },
-      emphasis: { scale: 1.12 },
-      labelLayout: { hideOverlap: false },
-      data: rows.map((word, index) => {
-        const ratio = (word.value - min) / Math.max(1, max - min)
-        const column = index % 3
-        const row = Math.floor(index / 3)
-        return {
-          name: word.name,
-          value: [16 + column * 34 + (row % 2) * 2, 13 + row * 24, word.value],
-          label: {
-            show: true,
-            position: 'inside',
-            formatter: word.name,
-            color: colors[index % colors.length],
-            fontSize: Math.round(12 + ratio * 13),
-            fontWeight: ratio > 0.6 ? 700 : 500,
-          },
-        }
-      }),
-    }],
+    ],
   }
 }

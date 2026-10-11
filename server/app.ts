@@ -62,6 +62,7 @@ export function createApiApp(options: ApiAppOptions = {}) {
       response.json({ mode: 'online', message })
     } catch {
       console.warn('[chat] 上游模型暂时不可用，已切换演示模式。')
+      response.set('X-Chat-Fallback', 'upstream')
       response.json(createMockReply(latestUserText))
     }
   })

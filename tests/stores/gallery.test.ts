@@ -27,8 +27,18 @@ describe('gallery data state', () => {
   })
 
   it('derives different finite values when the filter context changes', () => {
-    const students = getGalleryDataset({ year: 2025, region: '全国', population: '大学生', emotionType: '焦虑' })
-    const workers = getGalleryDataset({ year: 2025, region: '全国', population: '职场人', emotionType: '压力' })
+    const students = getGalleryDataset({
+      year: 2025,
+      region: '全国',
+      population: '大学生',
+      emotionType: '焦虑',
+    })
+    const workers = getGalleryDataset({
+      year: 2025,
+      region: '全国',
+      population: '职场人',
+      emotionType: '压力',
+    })
 
     expect(students.trends.every((row) => Object.values(row).every(Number.isFinite))).toBe(true)
     expect(workers.trends.at(-1)?.stress).not.toBe(students.trends.at(-1)?.stress)
@@ -40,11 +50,28 @@ describe('gallery data state', () => {
   })
 
   it('filters database records across region, population, and emotion', () => {
-    const records = filterDatabaseRecords({ region: '北京', population: '大学生', emotionType: '焦虑' })
+    const records = filterDatabaseRecords({
+      region: '北京',
+      population: '大学生',
+      emotionType: '焦虑',
+    })
 
     expect(records.length).toBeGreaterThan(0)
     expect(records.every((record) => record.region === '北京')).toBe(true)
     expect(records.every((record) => record.population === '大学生')).toBe(true)
     expect(records.every((record) => record.emotionType === '焦虑')).toBe(true)
+  })
+  it('uses the same selected region and value for filters, details and map', () => {
+    const store = useGalleryStore()
+    expect(store.selectedRegion).toBeNull()
+    store.setFilter('region', '广东')
+    expect(store.selectedRegion?.name).toBe('广东')
+    expect(store.selectedRegion?.riskIndex).toBe(
+      store.dataset.regions.find((r) => r.name === '广东')?.riskIndex,
+    )
+    store.selectRegion('北京')
+    expect(store.filters.region).toBe('北京')
+    store.resetFilters()
+    expect(store.selectedRegion).toBeNull()
   })
 })

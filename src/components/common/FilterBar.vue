@@ -2,7 +2,9 @@
 import type { GalleryFilters } from '@/types/statistics'
 
 defineProps<{ filters: GalleryFilters; regions: string[] }>()
-const emit = defineEmits<{ change: [key: keyof GalleryFilters, value: GalleryFilters[keyof GalleryFilters]] }>()
+const emit = defineEmits<{
+  change: [key: keyof GalleryFilters, value: GalleryFilters[keyof GalleryFilters]]
+}>()
 
 function valueOf(event: Event) {
   return (event.target as HTMLSelectElement).value
@@ -14,7 +16,9 @@ function valueOf(event: Event) {
     <label>
       <span>年份</span>
       <select :value="filters.year" @change="emit('change', 'year', Number(valueOf($event)))">
-        <option v-for="year in [2020, 2021, 2022, 2023, 2024, 2025]" :key="year" :value="year">{{ year }}</option>
+        <option v-for="year in [2020, 2021, 2022, 2023, 2024, 2025]" :key="year" :value="year">
+          {{ year }}
+        </option>
       </select>
     </label>
     <label>
@@ -27,13 +31,25 @@ function valueOf(event: Event) {
     <label>
       <span>人群</span>
       <select :value="filters.population" @change="emit('change', 'population', valueOf($event))">
-        <option v-for="group in ['青少年', '大学生', '职场人', '老年群体']" :key="group" :value="group">{{ group }}</option>
+        <option
+          v-for="group in ['青少年', '大学生', '职场人', '老年群体']"
+          :key="group"
+          :value="group"
+        >
+          {{ group }}
+        </option>
       </select>
     </label>
     <label>
       <span>情绪类型</span>
       <select :value="filters.emotionType" @change="emit('change', 'emotionType', valueOf($event))">
-        <option v-for="emotion in ['焦虑', '抑郁', '压力', '孤独', '睡眠困扰']" :key="emotion" :value="emotion">{{ emotion }}</option>
+        <option
+          v-for="emotion in ['焦虑', '抑郁', '压力', '孤独', '睡眠困扰']"
+          :key="emotion"
+          :value="emotion"
+        >
+          {{ emotion }}
+        </option>
       </select>
     </label>
   </div>
@@ -49,18 +65,31 @@ function valueOf(event: Event) {
   border-radius: var(--radius);
   background: var(--surface);
 }
-label { display: grid; gap: 6px; }
-label span { color: var(--ink-soft); font-size: 11px; font-weight: 700; }
+label {
+  display: grid;
+  gap: 6px;
+}
+label span {
+  color: var(--ink-soft);
+  font-size: 12px;
+  font-weight: 700;
+}
 select {
   width: 100%;
-  min-height: 40px;
+  min-height: 44px;
   padding: 0 34px 0 10px;
   border: 1px solid var(--line);
   border-radius: 6px;
   color: var(--ink);
   background: #fff;
 }
-select:focus-visible { outline: 2px solid var(--teal); outline-offset: 2px; }
-@media (max-width: 720px) { .filter-bar { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-@media (max-width: 430px) { .filter-bar { grid-template-columns: 1fr; } }
+select:focus-visible {
+  outline: 2px solid var(--teal);
+  outline-offset: 2px;
+}
+@media (max-width: 720px) {
+  .filter-bar {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
 </style>

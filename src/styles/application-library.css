@@ -1,0 +1,90 @@
+.application .application-library {
+  width: min(100%, 1120px);
+  min-height: calc(100dvh - var(--app-top-height) - var(--app-bottom-height));
+  margin: 0 auto;
+  padding: 32px 44px 42px;
+}
+
+.application .application-library .library-back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  margin-bottom: 18px;
+  color: var(--teal);
+  font-size: 13px;
+}
+
+.application .application-library h1 {
+  font-size: 30px;
+  font-weight: 500;
+}
+
+.application .application-library .case-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.application .application-library .case-card {
+  border-radius: 20px;
+}
+
+.application .application-library .case-hero {
+  grid-template-columns: minmax(0, 1fr) 190px;
+  gap: 28px;
+}
+
+.application .application-library .case-layout {
+  grid-template-columns: minmax(0, 1fr) 190px;
+  gap: 32px;
+}
+
+.application .application-library .case-aside {
+  top: calc(var(--app-top-height) + 20px);
+}
+
+.application .application-library .case-content > section {
+  scroll-margin-top: calc(var(--app-top-height) + 20px);
+}
+
+@media (max-width: 1100px) {
+  .application .application-library {
+    padding-inline: 28px;
+  }
+}
+
+@media (max-width: 1050px) {
+  .application .application-library .case-grid,
+  .application .application-library .case-hero,
+  .application .application-library .case-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .application .application-library .case-aside {
+    position: static;
+  }
+
+  .application .application-library .desktop-toc {
+    display: none;
+  }
+
+  .application .application-library .mobile-toc {
+    display: block;
+  }
+}
+
+@media (max-width: 767px) {
+  .application .application-library {
+    padding: 20px 20px 28px;
+  }
+
+  .application .application-library h1 {
+    font-size: 25px;
+  }
+}
+
+@media (max-width: 360px) {
+  .application .application-library {
+    padding-inline: 16px;
+  }
+}

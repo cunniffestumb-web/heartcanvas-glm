@@ -1,112 +1,456 @@
 <script setup lang="ts">
 import { computed, reactive } from 'vue'
-import { BracesIcon, DatabaseIcon, FileCheck2Icon, FilterIcon, LockKeyholeIcon, ScanSearchIcon } from '@lucide/vue'
+import { ArrowRightIcon, ChevronDownIcon, DatabaseIcon, InfoIcon } from '@lucide/vue'
 import SectionHeading from '@/components/common/SectionHeading.vue'
 import { baseRegions, filterDatabaseRecords } from '@/services/statisticsService'
 import type { GalleryFilters } from '@/types/statistics'
-
 const filters = reactive<Pick<GalleryFilters, 'region' | 'population' | 'emotionType'>>({
   region: '全国',
   population: '大学生',
   emotionType: '焦虑',
 })
 const visibleRecords = computed(() => filterDatabaseRecords(filters))
-
-const pipeline = [
-  ['01', '数据采集', '报告、问卷与开放文本'],
-  ['02', '清洗脱敏', '去标识化与质量筛查'],
-  ['03', '字段抽取', 'BERT 类模型提取实体'],
-  ['04', '标签归档', '时间、地域、人群、情绪'],
-  ['05', '智能应用', '图表联动与咨询背景'],
-]
 </script>
-
 <template>
   <section class="page database-page">
     <div class="page-inner">
-      <div class="page-intro">
-        <SectionHeading eyebrow="心理数据数据库" title="从原始信号到可解释上下文" description="通过匿名化聚合数据呈现心理健康趋势，在隐私保护与可解释分析之间建立清晰边界。" />
-        <div class="database-seal"><LockKeyholeIcon :size="20" /><span>隐私优先<br><small>清洗 · 脱敏 · 分级访问</small></span></div>
+      <SectionHeading
+        eyebrow="心理数据数据库"
+        title="每一个视角，都有清楚的口径"
+        description="用时间、地区、人群与情绪四个字段组织聚合记录，理解图表背后的数据结构。"
+      />
+      <div class="data-note">
+        <InfoIcon :size="18" />
+        <p>
+          当前记录为匿名化聚合数据的展示样例；来源字段与样本量用于说明结构，不代表已开展对应调查。
+        </p>
       </div>
-
-      <section class="source-band">
-        <article><DatabaseIcon :size="22" /><h3>公开报告</h3><p>官方心理健康报告与公开研究摘要，用于指标框架参考。</p></article>
-        <article><FileCheck2Icon :size="22" /><h3>匿名化问卷</h3><p>仅保留群体、情绪与风险字段，移除可识别个人的信息。</p></article>
-        <article><ScanSearchIcon :size="22" /><h3>文本分析</h3><p>提取开放情绪文本的群体趋势，不呈现个人原始内容。</p></article>
-        <article><BracesIcon :size="22" /><h3>多源融合</h3><p>统一报告、问卷与文本结构，为跨维度分析提供一致口径。</p></article>
-      </section>
-
-      <section class="pipeline-section">
-        <SectionHeading eyebrow="处理链路" title="五步数据治理流程" description="每一步都保留可追踪边界，为图表与咨询上下文提供一致的数据契约。" />
-        <div class="pipeline">
-          <article v-for="item in pipeline" :key="item[0]"><span>{{ item[0] }}</span><h3>{{ item[1] }}</h3><p>{{ item[2] }}</p></article>
-        </div>
-      </section>
-
-      <section class="taxonomy-section">
-        <div><p class="section-kicker">四维标签体系</p><h2>同一条数据，从四个视角被理解</h2></div>
-        <div class="taxonomy"><span>时间<small>2020—2025</small></span><span>地域<small>全国与省级</small></span><span>人群<small>四类重点群体</small></span><span>情绪<small>五类关注方向</small></span></div>
-      </section>
-
       <section class="records-section">
         <div class="records-head">
-          <div><p class="section-kicker">数据记录</p><h2>可筛选聚合数据表</h2></div>
-          <span class="demo-label">筛选结果 · {{ visibleRecords.length }} 条</span>
+          <h2>探索数据记录</h2>
+          <span>{{ visibleRecords.length }} 条匹配记录</span>
         </div>
         <div class="table-filters">
-          <FilterIcon :size="18" />
-          <label><span>地区</span><select v-model="filters.region" data-filter="region"><option value="全国">全国</option><option v-for="region in baseRegions" :key="region.name" :value="region.name">{{ region.name }}</option></select></label>
-          <label><span>人群</span><select v-model="filters.population"><option v-for="group in ['青少年','大学生','职场人','老年群体']" :key="group">{{ group }}</option></select></label>
-          <label><span>情绪</span><select v-model="filters.emotionType"><option v-for="emotion in ['焦虑','抑郁','压力','孤独','睡眠困扰']" :key="emotion">{{ emotion }}</option></select></label>
+          <label
+            ><span>地区</span
+            ><select v-model="filters.region" data-filter="region">
+              <option value="全国">全国</option>
+              <option v-for="region in baseRegions" :key="region.name" :value="region.name">
+                {{ region.name }}
+              </option>
+            </select></label
+          ><label
+            ><span>人群</span
+            ><select v-model="filters.population">
+              <option v-for="group in ['青少年', '大学生', '职场人', '老年群体']" :key="group">
+                {{ group }}
+              </option>
+            </select></label
+          ><label
+            ><span>情绪</span
+            ><select v-model="filters.emotionType">
+              <option
+                v-for="emotion in ['焦虑', '抑郁', '压力', '孤独', '睡眠困扰']"
+                :key="emotion"
+              >
+                {{ emotion }}
+              </option>
+            </select></label
+          >
         </div>
-        <div class="table-wrap">
+        <div class="table-wrap records-desktop">
           <table>
-            <thead><tr><th>记录 ID</th><th>年份</th><th>地区</th><th>人群</th><th>情绪类型</th><th>风险指数</th><th>来源</th><th>样本量</th></tr></thead>
+            <thead>
+              <tr>
+                <th>记录ID</th>
+                <th>年份</th>
+                <th>地区</th>
+                <th>人群</th>
+                <th>情绪类型</th>
+                <th>关注指数</th>
+                <th>样例来源</th>
+                <th>样例样本量</th>
+              </tr>
+            </thead>
             <tbody>
-              <tr v-for="record in visibleRecords" :key="record.id"><td><code>{{ record.id }}</code></td><td>{{ record.year }}</td><td>{{ record.region }}</td><td>{{ record.population }}</td><td>{{ record.emotionType }}</td><td><strong>{{ record.riskIndex }}</strong></td><td>{{ record.source }}</td><td>{{ record.sampleSize.toLocaleString() }}</td></tr>
-              <tr v-if="visibleRecords.length === 0"><td colspan="8" class="empty-row">当前筛选组合暂无匹配记录，请调整条件。</td></tr>
+              <tr v-for="record in visibleRecords" :key="record.id">
+                <td>
+                  <code>{{ record.id }}</code>
+                </td>
+                <td>{{ record.year }}</td>
+                <td>{{ record.region }}</td>
+                <td>{{ record.population }}</td>
+                <td>{{ record.emotionType }}</td>
+                <td>
+                  <strong>{{ record.riskIndex }}</strong>
+                </td>
+                <td>{{ record.source }}</td>
+                <td>{{ record.sampleSize.toLocaleString() }}</td>
+              </tr>
+              <tr v-if="!visibleRecords.length">
+                <td colspan="8" class="empty-row">当前筛选组合暂无匹配记录，请调整条件。</td>
+              </tr>
             </tbody>
           </table>
         </div>
+        <div class="records-mobile">
+          <details v-for="record in visibleRecords" :key="record.id" class="record-item">
+            <summary>
+              <span
+                ><strong>{{ record.region }} · {{ record.population }}</strong
+                ><small>{{ record.year }} · {{ record.emotionType }}</small></span
+              ><span class="record-value">{{ record.riskIndex }}<small>关注指数</small></span
+              ><ChevronDownIcon :size="18" />
+            </summary>
+            <dl>
+              <div>
+                <dt>记录ID</dt>
+                <dd>{{ record.id }}</dd>
+              </div>
+              <div>
+                <dt>年份</dt>
+                <dd>{{ record.year }}</dd>
+              </div>
+              <div>
+                <dt>地区</dt>
+                <dd>{{ record.region }}</dd>
+              </div>
+              <div>
+                <dt>人群</dt>
+                <dd>{{ record.population }}</dd>
+              </div>
+              <div>
+                <dt>情绪类型</dt>
+                <dd>{{ record.emotionType }}</dd>
+              </div>
+              <div>
+                <dt>样例来源</dt>
+                <dd>{{ record.source }}</dd>
+              </div>
+              <div>
+                <dt>样例样本量</dt>
+                <dd>{{ record.sampleSize.toLocaleString() }}</dd>
+              </div>
+            </dl>
+          </details>
+          <p v-if="!visibleRecords.length" class="empty-state">
+            当前筛选组合暂无匹配记录，请调整条件。
+          </p>
+        </div>
       </section>
-
+      <section class="data-explanation">
+        <div>
+          <p class="section-kicker">理解数据结构</p>
+          <h2>同一条记录，四个观察维度</h2>
+          <p>个人对话与这里的群体样例分别保存，个人消息不会直接变成全国统计。</p>
+          <RouterLink class="text-link" to="/gallery"
+            >回到陈列馆探索 <ArrowRightIcon :size="18"
+          /></RouterLink>
+        </div>
+        <div class="dimensions">
+          <article>
+            <span>01</span>
+            <h3>时间</h3>
+            <p>记录年份，比较不同时间的展示样例。</p>
+          </article>
+          <article>
+            <span>02</span>
+            <h3>地区</h3>
+            <p>按地区组织记录，查看相关背景。</p>
+          </article>
+          <article>
+            <span>03</span>
+            <h3>人群</h3>
+            <p>区分四类群体，保持比较口径清楚。</p>
+          </article>
+          <article>
+            <span>04</span>
+            <h3>情绪</h3>
+            <p>标注关注主题，连接图表与支持入口。</p>
+          </article>
+        </div>
+      </section>
+      <div class="source-description">
+        <DatabaseIcon :size="22" />
+        <div>
+          <h2>资料来源与使用方式</h2>
+          <p>
+            公开研究与报告用于科普框架参考；案例中心保留原文链接和核验状态。此处的展示样例用于体验筛选与可视化，不构成真实流行病学结论。
+          </p>
+        </div>
+        <RouterLink class="text-link" to="/cases"
+          >阅读公开案例 <ArrowRightIcon :size="17"
+        /></RouterLink>
+      </div>
     </div>
   </section>
 </template>
-
 <style scoped>
-.page-intro { display: flex; align-items: start; justify-content: space-between; gap: 32px; }
-.database-seal { display: flex; align-items: center; gap: 10px; padding: 12px 14px; border: 1px solid var(--line); border-radius: var(--radius); color: var(--teal-dark); background: var(--surface); font-size: 12px; font-weight: 700; }
-.database-seal small { color: var(--ink-soft); font-size: 9px; font-weight: 400; }
-.source-band { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; border: 1px solid var(--line); background: var(--line); }
-.source-band article { min-height: 190px; padding: 22px; background: var(--surface); }
-.source-band svg { color: var(--teal); }
-.source-band h3 { margin: 34px 0 8px; font-size: 16px; }
-.source-band p, .pipeline p { margin: 0; color: var(--ink-soft); font-size: 12px; line-height: 1.7; }
-.pipeline-section, .records-section { padding-top: 72px; }
-.pipeline { display: grid; grid-template-columns: repeat(5, 1fr); border-block: 1px solid var(--line); }
-.pipeline article { position: relative; min-height: 150px; padding: 22px 18px; border-right: 1px solid var(--line); }
-.pipeline article:last-child { border-right: 0; }
-.pipeline span, .section-kicker { color: var(--coral); font-size: 10px; font-weight: 700; }
-.pipeline h3 { margin: 24px 0 8px; font-size: 15px; }
-.taxonomy-section { display: grid; grid-template-columns: .8fr 1.2fr; gap: 64px; align-items: center; margin-top: 72px; padding: 42px; border: 1px solid var(--line); background: var(--surface-muted); }
-.taxonomy-section h2, .records-head h2 { margin: 7px 0 0; font-size: 27px; line-height: 1.3; }
-.taxonomy { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
-.taxonomy > span { display: grid; gap: 5px; padding: 16px; border-left: 3px solid var(--teal); background: var(--surface); font-size: 14px; font-weight: 700; }
-.taxonomy small { color: var(--ink-soft); font-size: 10px; font-weight: 400; }
-.records-head { display: flex; justify-content: space-between; align-items: end; gap: 24px; margin-bottom: 18px; }
-.demo-label { padding: 7px 10px; border-radius: 5px; color: var(--gold); background: var(--gold-soft); font-size: 10px; font-weight: 700; }
-.table-filters { display: flex; align-items: end; gap: 10px; padding: 12px; border: 1px solid var(--line); border-bottom: 0; background: var(--surface-muted); }
-.table-filters > svg { align-self: center; margin: 0 4px; color: var(--teal); }
-.table-filters label { min-width: 150px; display: grid; gap: 4px; }
-.table-filters label span { color: var(--ink-soft); font-size: 9px; }
-select { min-height: 36px; padding: 0 10px; border: 1px solid var(--line); border-radius: 5px; background: #fff; }
-.table-wrap { overflow-x: auto; border: 1px solid var(--line); background: var(--surface); }
-table { width: 100%; min-width: 880px; border-collapse: collapse; font-size: 12px; }
-th { padding: 12px 14px; text-align: left; color: var(--ink-soft); background: #f4f5f1; font-size: 10px; }
-td { padding: 14px; border-top: 1px solid var(--line); }
-td code { color: var(--teal-dark); } td strong { color: var(--coral); }
-.empty-row { padding: 36px; text-align: center; color: var(--ink-soft); }
-@media (max-width: 900px) { .source-band { grid-template-columns: repeat(2, 1fr); } .pipeline { grid-template-columns: 1fr; } .pipeline article { min-height: auto; border-right: 0; border-bottom: 1px solid var(--line); } .taxonomy-section { grid-template-columns: 1fr; gap: 28px; } }
-@media (max-width: 620px) { .page-intro, .records-head { flex-direction: column; align-items: start; } .source-band { grid-template-columns: 1fr; } .taxonomy-section { padding: 24px 18px; } .taxonomy { grid-template-columns: 1fr; } .table-filters { align-items: stretch; flex-direction: column; } .table-filters label { width: 100%; } }
+.data-note {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 14px 16px;
+  border-left: 3px solid #b8cda8;
+  background: #edf1e7;
+  color: var(--ink-soft);
+}
+.data-note svg {
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+.data-note p {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.8;
+}
+.records-section {
+  margin-top: 36px;
+}
+.records-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+.records-head h2 {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 500;
+}
+.records-head span {
+  color: var(--ink-soft);
+  font-size: 12px;
+}
+.table-filters {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  padding: 18px;
+  border: 1px solid var(--line);
+  border-radius: 12px 12px 0 0;
+  background: var(--surface-muted);
+}
+label {
+  display: grid;
+  gap: 6px;
+}
+label span {
+  color: var(--ink-soft);
+  font-size: 12px;
+}
+select {
+  width: 100%;
+  min-height: 44px;
+  padding: 8px 12px;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  font-size: 16px;
+}
+.table-wrap {
+  overflow-x: auto;
+  border: 1px solid var(--line);
+  border-top: 0;
+  border-radius: 0 0 12px 12px;
+  background: var(--surface);
+}
+table {
+  width: 100%;
+  min-width: 900px;
+  border-collapse: collapse;
+}
+th {
+  padding: 15px 16px;
+  color: var(--ink-soft);
+  font-size: 12px;
+  font-weight: 500;
+  text-align: left;
+}
+td {
+  padding: 17px 16px;
+  border-top: 1px solid var(--line);
+  font-size: 14px;
+}
+td strong {
+  color: var(--teal);
+  font-weight: 500;
+}
+code {
+  color: var(--ink-soft);
+  font-size: 12px;
+}
+.empty-row {
+  padding: 40px;
+  color: var(--ink-soft);
+  text-align: center;
+}
+.records-mobile {
+  display: none;
+}
+.data-explanation {
+  display: grid;
+  grid-template-columns: 0.85fr 1.15fr;
+  gap: 70px;
+  margin-top: 64px;
+  padding-top: 42px;
+  border-top: 1px solid var(--line);
+}
+.data-explanation h2 {
+  margin: 0 0 14px;
+  font-size: 27px;
+  font-weight: 500;
+}
+.data-explanation > div > p:not(.section-kicker) {
+  color: var(--ink-soft);
+  font-size: 16px;
+}
+.dimensions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px;
+}
+.dimensions article {
+  padding-left: 16px;
+  border-left: 2px solid #c7dcca;
+}
+.dimensions span {
+  color: var(--coral);
+  font-size: 12px;
+}
+.dimensions h3 {
+  margin: 8px 0 5px;
+  font-size: 18px;
+  font-weight: 500;
+}
+.dimensions p {
+  margin: 0;
+  color: var(--ink-soft);
+  font-size: 14px;
+}
+.source-description {
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+  margin-top: 52px;
+  padding: 24px;
+  border-radius: 14px;
+  background: #edf1e7;
+}
+.source-description > svg {
+  flex-shrink: 0;
+  margin-top: 4px;
+  color: var(--teal);
+}
+.source-description h2 {
+  margin: 0 0 8px;
+  font-size: 18px;
+  font-weight: 500;
+}
+.source-description p {
+  margin: 0;
+  color: var(--ink-soft);
+  font-size: 14px;
+}
+.source-description > a {
+  flex-shrink: 0;
+  margin-left: auto;
+}
+@media (max-width: 767px) {
+  .records-desktop {
+    display: none;
+  }
+  .records-mobile {
+    display: grid;
+    gap: 12px;
+    margin-top: 14px;
+  }
+  .table-filters {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+    padding: 14px;
+    border-radius: 12px;
+  }
+  .table-filters label:last-child {
+    grid-column: 1 / -1;
+  }
+  .record-item {
+    overflow: hidden;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    background: var(--surface);
+  }
+  .record-item summary {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-height: 82px;
+    padding: 14px;
+    list-style: none;
+  }
+  .record-item summary > span {
+    display: grid;
+    gap: 3px;
+  }
+  .record-item strong {
+    font-size: 14px;
+    font-weight: 500;
+  }
+  .record-item small {
+    color: var(--ink-soft);
+    font-size: 12px;
+  }
+  .record-value {
+    margin-left: auto;
+    color: var(--teal);
+    text-align: right;
+    font-size: 24px;
+  }
+  .record-item summary > svg {
+    color: var(--ink-soft);
+    flex-shrink: 0;
+  }
+  .record-item[open] summary > svg {
+    transform: rotate(180deg);
+  }
+  .record-item dl {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+    margin: 0;
+    padding: 16px;
+    border-top: 1px solid var(--line);
+  }
+  dt {
+    color: var(--ink-soft);
+    font-size: 12px;
+  }
+  dd {
+    margin: 3px 0 0;
+    font-size: 14px;
+    overflow-wrap: anywhere;
+  }
+  .data-explanation {
+    grid-template-columns: 1fr;
+    gap: 24px;
+    margin-top: 40px;
+    padding-top: 28px;
+  }
+  .data-explanation h2 {
+    font-size: 24px;
+  }
+  .source-description {
+    flex-wrap: wrap;
+    gap: 12px;
+    padding: 18px;
+    margin-top: 36px;
+  }
+  .source-description > div {
+    flex: 1;
+  }
+  .source-description > a {
+    flex-basis: 100%;
+    margin-left: 34px;
+  }
+}
 </style>

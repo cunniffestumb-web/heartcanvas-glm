@@ -83,14 +83,17 @@ describe('chat api', () => {
     expect(response.status).toBe(200)
     expect(response.body.mode).toBe('mock')
     expect(response.body.message.emotion).toBe('睡眠困扰')
+    expect(response.headers['x-chat-fallback']).toBe('upstream')
   })
 
   it('rejects empty or oversized messages', async () => {
     const app = createApiApp({ provider: null })
     const empty = await request(app).post('/api/chat').send({ messages: [] })
-    const oversized = await request(app).post('/api/chat').send({
-      messages: [{ role: 'user', content: '压'.repeat(4001) }],
-    })
+    const oversized = await request(app)
+      .post('/api/chat')
+      .send({
+        messages: [{ role: 'user', content: '压'.repeat(4001) }],
+      })
 
     expect(empty.status).toBe(400)
     expect(oversized.status).toBe(400)

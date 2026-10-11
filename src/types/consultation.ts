@@ -22,6 +22,8 @@ export interface ConsultationSession {
   context: ChatContext
   insight: ChatInsight
   messages: ChatMessage[]
+  draft?: string
+  mode?: import('@shared/chat').ChatMode
 }
 
 export interface PersistedConsultationState {

@@ -10,6 +10,9 @@ export interface ChatMessage {
   emotion?: string
   riskLevel?: RiskLevel
   keywords?: string[]
+  assistantName?: string
+  sourceMode?: ChatMode
+  inReplyTo?: string
 }
 
 export interface ChatInsight {

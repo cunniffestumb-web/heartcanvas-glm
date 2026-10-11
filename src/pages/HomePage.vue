@@ -1,105 +1,616 @@
 <script setup lang="ts">
 import { defineAsyncComponent } from 'vue'
-import { ArrowRightIcon, BarChart3Icon, DatabaseIcon, MessageCircleIcon, ShieldCheckIcon, UsersIcon } from '@lucide/vue'
-import StatCard from '@/components/common/StatCard.vue'
-import ChartSkeleton from '@/components/charts/ChartSkeleton.vue'
+import {
+  ActivityIcon,
+  ArrowRightIcon,
+  ArrowUpRightIcon,
+  BookOpenIcon,
+  ChartNoAxesCombinedIcon,
+  MessageCircleIcon,
+  ShieldCheckIcon,
+} from '@lucide/vue'
+import { builtInDoctors } from '@/data/doctors'
+import { supportTopics } from '@/data/supportTopics'
 import { getGalleryDataset } from '@/services/statisticsService'
-
+import ChartSkeleton from '@/components/charts/ChartSkeleton.vue'
 const TrendLineChart = defineAsyncComponent({
   loader: () => import('@/components/charts/TrendLineChart.vue'),
   loadingComponent: ChartSkeleton,
   delay: 0,
 })
-const preview = getGalleryDataset({ year: 2025, region: '全国', population: '大学生', emotionType: '焦虑' })
+const preview = getGalleryDataset({
+  year: 2025,
+  region: '全国',
+  population: '大学生',
+  emotionType: '焦虑',
+})
+const examples: Record<string, string> = {
+  warm: '先听见你的感受，再一起慢慢展开。',
+  rational: '厘清事实与想法，找到可行的下一步。',
+  coach: '看见已有的力量，按自己的节奏行动。',
+  steady: '留出安静的空间，尊重每一次停顿。',
+}
 </script>
-
 <template>
   <div class="home-page">
     <section class="home-hero">
       <div class="page-inner hero-layout">
-        <div class="hero-copy reveal">
-          <p class="product-kicker"><span></span> AI 驱动的心理健康洞察平台</p>
-          <h1>心绘 GLM</h1>
-          <p class="hero-subtitle">用数据看见情绪，用智能辅助干预</p>
-          <p class="hero-description">连接心理健康数据陈列、群体风险洞察与非诊断性智能支持，形成“识别 → 分析 → 干预”的完整服务闭环。</p>
+        <div class="hero-copy">
+          <p class="section-kicker"><span></span>心理数据与智能支持</p>
+          <h1>心绘 <span>GLM</span></h1>
+          <h2>把心事说出来，<br />让情绪被看见。</h2>
+          <p class="hero-description">
+            基于本地 GLM 模型训练而成，陪你理解此刻的感受。用自在的方式表达心事，找到一个更轻松、更可行的下一步。
+          </p>
           <div class="hero-actions">
-            <RouterLink class="button primary" to="/gallery">进入陈列馆 <ArrowRightIcon :size="17" /></RouterLink>
-            <RouterLink class="button secondary" to="/consultation">开始智能支持 <MessageCircleIcon :size="17" /></RouterLink>
+            <RouterLink class="button primary" to="/app"
+              >进入心绘应用 <ArrowRightIcon :size="18" /></RouterLink
+            ><RouterLink class="button" to="/gallery"
+              >探索心理数据 <ArrowUpRightIcon :size="18"
+            /></RouterLink>
           </div>
-          <p class="safety-line"><ShieldCheckIcon :size="16" /> 平台提供心理支持建议，不替代专业咨询或医疗服务</p>
+          <p class="safety-line">
+            <ShieldCheckIcon :size="16" />心理支持建议，不替代专业咨询或医疗服务
+          </p>
         </div>
-
-        <div class="hero-data reveal delay-1" aria-label="全国心理风险数据预览">
-          <div class="preview-head">
-            <div><span class="live-dot"></span><small>全国群体趋势 · 2025</small></div>
-            <strong>69</strong>
-            <span>综合关注指数</span>
+        <div class="hero-preview">
+          <div class="conversation-preview">
+            <header>
+              <span class="preview-mark"><ActivityIcon :size="21" /></span>
+              <div><strong>温柔陪伴</strong><small>从你的感受开始</small></div>
+              <span class="preview-label">体验片段</span>
+            </header>
+            <p class="preview-user">最近事情好多，总觉得自己做得不够好。</p>
+            <div class="preview-reply">
+              <span class="reply-label">林医生</span>
+              <p>
+                听起来，你已经努力了很久。我们先不用急着解决所有事情，可以从最让你疲惫的一件事说起。
+              </p>
+            </div>
+            <RouterLink class="preview-composer" to="/consultation"
+              ><span>说说你此刻的感受…</span><ArrowUpRightIcon :size="20"
+            /></RouterLink>
           </div>
-          <TrendLineChart :data="preview.trends" context="大学生 · 焦虑" />
+          <div class="trend-preview">
+            <div>
+              <p class="section-kicker">看见情绪的变化</p>
+              <span>大学生 · 群体趋势样例</span
+              ><RouterLink to="/gallery" aria-label="查看完整心理数据"
+                ><ArrowUpRightIcon :size="20"
+              /></RouterLink>
+            </div>
+            <TrendLineChart :data="preview.trends" context="大学生 · 焦虑" />
+          </div>
         </div>
       </div>
     </section>
-
-    <section class="home-stats">
-      <div class="page-inner stats-grid">
-        <StatCard value="69" label="全国情绪关注指数" note="匿名化聚合数据" tone="teal"><template #icon><BarChart3Icon :size="20" /></template></StatCard>
-        <StatCard value="12,680" label="本月支持对话" note="多轮智能陪伴" tone="coral"><template #icon><MessageCircleIcon :size="20" /></template></StatCard>
-        <StatCard value="大学生" label="当前高关注人群" note="焦虑与睡眠困扰" tone="gold"><template #icon><UsersIcon :size="20" /></template></StatCard>
-        <StatCard value="4 维" label="平台数据标签" note="时间 · 地域 · 人群 · 情绪" tone="blue"><template #icon><DatabaseIcon :size="20" /></template></StatCard>
+    <section class="topic-section">
+      <div class="page-inner">
+        <div class="section-head">
+          <div>
+            <p class="section-kicker">从一件小事说起</p>
+            <h2>今天，想聊点什么？</h2>
+          </div>
+          <p>选择一个话题，整理好思绪再开始。</p>
+        </div>
+        <div class="topic-grid">
+          <RouterLink
+            v-for="(topic, index) in supportTopics"
+            :key="topic.id"
+            :to="{ path: '/consultation', query: { topic: topic.id } }"
+            ><span class="topic-number">0{{ index + 1 }}</span>
+            <h3>{{ topic.title }}</h3>
+            <p>{{ topic.description }}</p>
+            <ArrowUpRightIcon :size="20"
+          /></RouterLink>
+        </div>
       </div>
     </section>
-
-    <section class="value-band">
-      <div class="page-inner value-layout">
+    <section class="styles-section">
+      <div class="page-inner">
+        <div class="section-head">
+          <div>
+            <p class="section-kicker">用你自在的方式交流</p>
+            <h2>四种陪伴风格，同一份认真倾听</h2>
+          </div>
+          <RouterLink class="text-link" to="/consultation"
+            >选择你的陪伴 <ArrowRightIcon :size="18"
+          /></RouterLink>
+        </div>
+        <div class="style-grid">
+          <article v-for="doctor in builtInDoctors" :key="doctor.id" :data-style="doctor.id">
+            <span class="style-avatar">{{ doctor.name.slice(0, 1) }}</span>
+            <h3>{{ doctor.title }}</h3>
+            <p>{{ examples[doctor.id] }}</p>
+            <small
+              >{{ doctor.name }} ·
+              {{ doctor.voicePreference === 'female' ? '柔和女声' : '沉稳男声' }}</small
+            >
+          </article>
+        </div>
+      </div>
+    </section>
+    <section class="resources-section">
+      <div class="page-inner resource-layout">
         <div>
-          <p class="section-kicker">问题与回应</p>
-          <h2>让分散的心理信号，成为可理解的行动线索</h2>
+          <p class="section-kicker">理解，也来自更多视角</p>
+          <h2>看见自己，<br />也理解不同的经历。</h2>
+          <p class="resource-description">
+            群体数据帮助理解常见困扰，公开案例提供认识与求助的线索。你可以带着自己的问题继续交流。
+          </p>
         </div>
-        <div class="pain-list">
-          <article><span>01</span><div><h3>识别</h3><p>从趋势、地域、人群与开放文本中识别值得关注的情绪信号。</p></div></article>
-          <article><span>02</span><div><h3>分析</h3><p>通过四维标签和联动图表理解风险背景，坚持群体洞察与医学诊断的清晰边界。</p></div></article>
-          <article><span>03</span><div><h3>干预</h3><p>以温和的心理支持建议和专业求助提示，提供低压力的下一步。</p></div></article>
+        <div class="resource-links">
+          <RouterLink to="/gallery"
+            ><ChartNoAxesCombinedIcon :size="24" />
+            <div>
+              <h3>心理数据陈列馆</h3>
+              <p>探索趋势、地区与人群的情绪关注方向</p>
+            </div>
+            <ArrowRightIcon :size="20" /></RouterLink
+          ><RouterLink to="/cases"
+            ><BookOpenIcon :size="24" />
+            <div>
+              <h3>公开案例中心</h3>
+              <p>从不同经历中认识困扰与求助过程</p>
+            </div>
+            <ArrowRightIcon :size="20" /></RouterLink
+          ><RouterLink to="/consultation"
+            ><MessageCircleIcon :size="24" />
+            <div>
+              <h3>持续的支持对话</h3>
+              <p>文字与语音交流，随时回到自己的会话</p>
+            </div>
+            <ArrowRightIcon :size="20"
+          /></RouterLink>
         </div>
+      </div>
+    </section>
+    <section class="capabilities">
+      <div class="page-inner">
+        <div><strong>34</strong><span>省级地区视图</span></div>
+        <div><strong>5</strong><span>数据探索视角</span></div>
+        <div><strong>4</strong><span>内置陪伴风格</span></div>
+        <div><strong>文字＋语音</strong><span>按习惯选择表达方式</span></div>
       </div>
     </section>
   </div>
 </template>
-
 <style scoped>
-.home-hero { min-height: min(720px, calc(100vh - 68px)); padding: 58px 24px 34px; display: grid; align-items: center; overflow: hidden; }
-.hero-layout { display: grid; grid-template-columns: minmax(0, .9fr) minmax(480px, 1.1fr); gap: 64px; align-items: center; }
-.product-kicker, .section-kicker { margin: 0 0 16px; color: var(--teal-dark); font-size: 12px; font-weight: 700; }
-.product-kicker span { display: inline-block; width: 22px; height: 2px; margin-right: 8px; vertical-align: middle; background: var(--coral); }
-h1 { margin: 0; font-size: 72px; line-height: 1; letter-spacing: 0; }
-.hero-subtitle { margin: 18px 0 0; color: var(--teal-dark); font-size: 25px; font-weight: 700; }
-.hero-description { max-width: 620px; margin: 20px 0 0; color: var(--ink-soft); font-size: 16px; line-height: 1.85; }
-.hero-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 30px; }
-.button { min-height: 46px; display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 0 18px; border: 1px solid var(--teal); border-radius: 7px; font-size: 14px; font-weight: 700; transition: transform 180ms ease, box-shadow 180ms ease, background 180ms ease; }
-.button:hover { transform: translateY(-2px); box-shadow: var(--shadow-sm); }
-.button.primary { color: white; background: var(--teal); }
-.button.secondary { color: var(--teal-dark); background: transparent; }
-.safety-line { display: flex; align-items: center; gap: 7px; margin: 20px 0 0; color: var(--ink-soft); font-size: 11px; }
-.hero-data { min-width: 0; padding: 22px 22px 8px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); box-shadow: var(--shadow-md); }
-.preview-head { display: grid; grid-template-columns: 1fr auto; align-items: end; gap: 3px 16px; }
-.preview-head > div { display: flex; align-items: center; gap: 7px; color: var(--ink-soft); }
-.preview-head strong { grid-row: span 2; color: var(--teal-dark); font-size: 48px; line-height: 1; }
-.preview-head > span { color: var(--ink-soft); font-size: 11px; }
-.live-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--coral); animation: pulse 1.6s ease-in-out infinite; }
-.home-stats { padding: 0 24px 70px; }
-.stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
-.value-band { padding: 72px 24px 90px; border-top: 1px solid var(--line); background: var(--surface-muted); }
-.value-layout { display: grid; grid-template-columns: .85fr 1.15fr; gap: 80px; }
-.value-layout h2 { max-width: 500px; margin: 0; font-size: 36px; line-height: 1.35; }
-.pain-list { display: grid; }
-.pain-list article { display: grid; grid-template-columns: 46px 1fr; gap: 18px; padding: 22px 0; border-bottom: 1px solid var(--line); }
-.pain-list article:first-child { padding-top: 0; }
-.pain-list span { color: var(--coral); font: 700 12px/1.5 monospace; }
-.pain-list h3 { margin: 0 0 8px; font-size: 18px; }
-.pain-list p { margin: 0; color: var(--ink-soft); font-size: 14px; line-height: 1.7; }
-.reveal { animation: reveal 420ms ease both; }
-.delay-1 { animation-delay: 100ms; }
-@keyframes reveal { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
-@keyframes pulse { 50% { opacity: .35; transform: scale(.75); } }
-@media (max-width: 1000px) { .hero-layout { grid-template-columns: 1fr; gap: 36px; } .home-hero { min-height: auto; } .hero-data { width: 100%; } .stats-grid { grid-template-columns: repeat(2, 1fr); } }
-@media (max-width: 720px) { .home-hero { padding: 42px 16px 26px; } .hero-layout { gap: 28px; } h1 { font-size: 52px; } .hero-subtitle { font-size: 20px; } .hero-data { padding: 16px 10px 0; } .home-stats { padding: 0 16px 52px; } .stats-grid { grid-template-columns: 1fr; } .value-band { padding: 54px 16px 68px; } .value-layout { grid-template-columns: 1fr; gap: 36px; } .value-layout h2 { font-size: 29px; } }
+.home-hero {
+  padding: 64px 24px 58px;
+  border-bottom: 1px solid var(--line);
+  background: radial-gradient(ellipse at 82% 25%, #e7eee2 0, transparent 48%), var(--bg);
+}
+.hero-layout {
+  display: grid;
+  grid-template-columns: 0.95fr 1fr;
+  gap: 80px;
+  align-items: center;
+}
+.hero-copy .section-kicker {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.hero-copy .section-kicker span {
+  width: 24px;
+  height: 2px;
+  background: var(--coral);
+}
+h1 {
+  margin: 0 0 18px;
+  font-size: 64px;
+  line-height: 1.1;
+  font-weight: 600;
+  letter-spacing: -0.04em;
+}
+h1 span {
+  color: var(--teal);
+  font-weight: 400;
+}
+h2 {
+  margin: 0;
+  font-size: 32px;
+  line-height: 1.55;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+}
+.hero-description {
+  max-width: 430px;
+  margin: 22px 0 28px;
+  color: var(--ink-soft);
+  font-size: 16px;
+  line-height: 1.9;
+}
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.safety-line {
+  display: flex;
+  align-items: flex-start;
+  gap: 7px;
+  margin: 20px 0 0;
+  color: var(--ink-soft);
+  font-size: 12px;
+}
+.safety-line svg {
+  flex-shrink: 0;
+  margin-top: 3px;
+}
+.hero-preview {
+  position: relative;
+  min-width: 0;
+}
+.conversation-preview {
+  position: relative;
+  padding: 24px;
+  border: 1px solid #dce4d7;
+  border-radius: 20px;
+  background: #fffefa;
+  box-shadow: var(--shadow-md);
+}
+.conversation-preview header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 24px;
+}
+.preview-mark {
+  width: 40px;
+  height: 40px;
+  display: grid;
+  place-items: center;
+  border-radius: 13px;
+  color: var(--teal);
+  background: var(--teal-soft);
+}
+.conversation-preview header div {
+  display: grid;
+}
+.conversation-preview strong {
+  font-size: 14px;
+}
+.conversation-preview small,
+.preview-label {
+  color: var(--ink-soft);
+  font-size: 12px;
+}
+.preview-label {
+  margin-left: auto;
+}
+.preview-user {
+  max-width: 85%;
+  margin: 0 0 22px auto;
+  padding: 12px 15px;
+  border-radius: 14px 14px 4px 14px;
+  background: #e8f1e6;
+  font-size: 14px;
+}
+.preview-reply {
+  max-width: 94%;
+}
+.reply-label {
+  color: var(--teal);
+  font-size: 12px;
+  font-weight: 700;
+}
+.preview-reply p {
+  margin: 6px 0 24px;
+  font-size: 14px;
+  line-height: 1.9;
+}
+.preview-composer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 52px;
+  padding: 12px 15px;
+  border: 1px solid #e4e7df;
+  border-radius: 13px;
+  color: var(--ink-soft);
+  background: #f7f8f1;
+  font-size: 14px;
+}
+.preview-composer svg {
+  color: var(--teal);
+}
+.trend-preview {
+  width: 84%;
+  margin: 20px 0 0 auto;
+  padding: 16px 20px 6px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: #fffefa;
+}
+.trend-preview > div:first-child {
+  position: relative;
+}
+.trend-preview .section-kicker {
+  margin: 0;
+}
+.trend-preview span {
+  color: var(--ink-soft);
+  font-size: 12px;
+}
+.trend-preview a {
+  position: absolute;
+  right: 0;
+  top: 0;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  color: var(--teal);
+}
+.trend-preview :deep(.chart-canvas) {
+  height: 155px !important;
+  min-height: 155px;
+}
+.topic-section,
+.styles-section,
+.resources-section {
+  padding: 66px 24px;
+}
+.section-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 28px;
+}
+.section-head h2 {
+  font-size: 28px;
+}
+.section-head > p {
+  max-width: 290px;
+  margin: 0;
+  color: var(--ink-soft);
+  font-size: 14px;
+}
+.topic-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 20px;
+}
+.topic-grid a {
+  position: relative;
+  display: block;
+  min-height: 156px;
+  padding: 22px 0;
+  border-top: 2px solid #c6d9cb;
+  border-bottom: 1px solid var(--line);
+}
+.topic-number {
+  color: var(--coral);
+  font-size: 12px;
+}
+.topic-grid h3 {
+  margin: 14px 0 6px;
+  font-size: 18px;
+  font-weight: 500;
+}
+.topic-grid p {
+  max-width: 190px;
+  margin: 0;
+  color: var(--ink-soft);
+  font-size: 14px;
+}
+.topic-grid svg {
+  position: absolute;
+  top: 24px;
+  right: 0;
+  color: var(--teal);
+}
+.topic-grid a:hover {
+  border-top-color: var(--teal);
+}
+.styles-section {
+  border-block: 1px solid var(--line);
+  background: #f0f2eb;
+}
+.style-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 24px;
+}
+.style-grid article {
+  --style-color: var(--teal);
+  --style-bg: #dcebe0;
+  padding: 22px 0 8px;
+}
+.style-grid article[data-style='rational'] {
+  --style-color: #5b819d;
+  --style-bg: #e0e9ef;
+}
+.style-grid article[data-style='coach'] {
+  --style-color: #bb7665;
+  --style-bg: #f0e1d8;
+}
+.style-grid article[data-style='steady'] {
+  --style-color: #9d803e;
+  --style-bg: #eae5d1;
+}
+.style-avatar {
+  width: 48px;
+  height: 48px;
+  display: grid;
+  place-items: center;
+  margin-bottom: 18px;
+  border-radius: 16px;
+  color: var(--style-color);
+  background: var(--style-bg);
+  font-size: 20px;
+}
+.style-grid h3 {
+  margin: 0 0 10px;
+  font-size: 19px;
+  font-weight: 500;
+}
+.style-grid p {
+  max-width: 240px;
+  margin: 0 0 15px;
+  color: var(--ink-soft);
+  font-size: 14px;
+  line-height: 1.9;
+}
+.style-grid small {
+  color: var(--style-color);
+  font-size: 12px;
+}
+.resource-layout {
+  display: grid;
+  grid-template-columns: 0.8fr 1.2fr;
+  gap: 90px;
+}
+.resource-description {
+  max-width: 380px;
+  margin: 18px 0 0;
+  color: var(--ink-soft);
+  font-size: 16px;
+}
+.resource-links a {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  min-height: 118px;
+  padding: 24px 0;
+  border-bottom: 1px solid var(--line);
+}
+.resource-links a:first-child {
+  border-top: 1px solid var(--line);
+}
+.resource-links svg {
+  flex-shrink: 0;
+  color: var(--teal);
+}
+.resource-links a > svg:last-child {
+  margin-left: auto;
+}
+.resource-links h3 {
+  margin: 0 0 7px;
+  font-size: 19px;
+  font-weight: 500;
+}
+.resource-links p {
+  margin: 0;
+  color: var(--ink-soft);
+  font-size: 14px;
+}
+.capabilities {
+  padding: 34px 24px 44px;
+  border-top: 1px solid var(--line);
+}
+.capabilities .page-inner {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+.capabilities .page-inner > div {
+  display: grid;
+  gap: 5px;
+  padding-left: 22px;
+  border-left: 1px solid var(--line);
+}
+.capabilities strong {
+  font-size: 25px;
+  color: var(--teal);
+  font-weight: 500;
+}
+.capabilities span {
+  color: var(--ink-soft);
+  font-size: 12px;
+}
+@media (max-width: 1023px) {
+  .hero-layout {
+    gap: 38px;
+  }
+  h1 {
+    font-size: 50px;
+  }
+  .hero-copy h2 {
+    font-size: 27px;
+  }
+  .resource-layout {
+    gap: 44px;
+  }
+  .topic-grid,
+  .style-grid {
+    gap: 16px;
+  }
+}
+@media (max-width: 767px) {
+  .home-hero {
+    padding: 36px 16px;
+  }
+  .hero-layout {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+  h1 {
+    font-size: 48px;
+  }
+  .hero-copy h2 {
+    font-size: 28px;
+  }
+  .hero-description {
+    margin: 16px 0 22px;
+  }
+  .conversation-preview {
+    padding: 20px;
+  }
+  .trend-preview {
+    width: 100%;
+    margin-top: 14px;
+  }
+  .topic-section,
+  .styles-section,
+  .resources-section {
+    padding: 40px 16px;
+  }
+  .section-head {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .section-head h2 {
+    font-size: 25px;
+  }
+  .topic-grid,
+  .style-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .topic-grid a {
+    min-height: 166px;
+  }
+  .resource-layout {
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+  .capabilities {
+    padding: 24px 16px;
+  }
+  .capabilities .page-inner {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 22px 8px;
+  }
+  .capabilities strong {
+    font-size: 22px;
+  }
+  .capabilities .page-inner > div {
+    padding-left: 14px;
+  }
+}
+@media (max-width: 360px) {
+  .hero-actions .button {
+    width: 100%;
+  }
+  .preview-label {
+    display: none;
+  }
+  .topic-grid p {
+    font-size: 12px;
+  }
+}
 </style>

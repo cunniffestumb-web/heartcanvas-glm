@@ -7,7 +7,7 @@ import BaseChart from './BaseChart.vue'
 import { buildMapOption, shortProvinceName } from './chartOptions'
 import { echarts } from './echartsRuntime'
 
-const props = defineProps<{ data: RegionRecord[] }>()
+const props = defineProps<{ data: RegionRecord[]; selected?: string }>()
 const emit = defineEmits<{ select: [name: string] }>()
 
 const geo = {
@@ -22,7 +22,14 @@ const geo = {
 }
 echarts.registerMap('china', geo as GeoJSONSourceInput)
 
-const option = computed(() => buildMapOption(props.data))
+const option = computed(() => buildMapOption(props.data, props.selected))
 </script>
 
-<template><BaseChart :option="option" height="410px" clickable @chart-click="emit('select', shortProvinceName($event))" /></template>
+<template>
+  <BaseChart
+    :option="option"
+    height="410px"
+    clickable
+    @chart-click="emit('select', shortProvinceName($event))"
+  />
+</template>

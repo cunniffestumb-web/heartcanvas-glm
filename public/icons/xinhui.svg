@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
+  <title>心绘</title>
+  <rect width="512" height="512" rx="118" fill="#f7f6f2"/>
+  <rect x="52" y="52" width="408" height="408" rx="136" fill="#e4ebe0"/>
+  <path d="M256 346C232 329 151 274 151 224C151 183 190 162 225 184C240 193 250 207 256 219C262 207 272 193 287 184C322 162 361 183 361 224C361 274 280 329 256 346Z" fill="#fffefa" stroke="#617f6b" stroke-width="18" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M217 259C238 278 268 278 289 259" fill="none" stroke="#c97967" stroke-width="12" stroke-linecap="round"/>
+  <circle cx="359" cy="147" r="12" fill="#c97967"/>
+</svg>

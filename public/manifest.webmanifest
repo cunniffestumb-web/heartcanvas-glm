@@ -1,0 +1,16 @@
+{
+  "id": "/app",
+  "name": "心绘 · 给心情一处安放",
+  "short_name": "心绘",
+  "description": "一个温暖的个人心情空间，记录情绪、整理心事、轻轻向前。",
+  "lang": "zh-CN",
+  "start_url": "/app",
+  "scope": "/app",
+  "display": "standalone",
+  "background_color": "#f7f6f2",
+  "theme_color": "#f7f6f2",
+  "icons": [
+    { "src": "/icons/xinhui-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "/icons/xinhui-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}

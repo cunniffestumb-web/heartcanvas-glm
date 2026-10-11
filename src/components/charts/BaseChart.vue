@@ -2,24 +2,32 @@
 import { nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import type { EChartsOption } from 'echarts'
 import { echarts } from './echartsRuntime'
+import { useMediaQuery } from '@/composables/useMediaQuery'
 
-const props = withDefaults(defineProps<{
-  option: EChartsOption
-  height?: string
-  clickable?: boolean
-}>(), {
-  height: '340px',
-  clickable: false,
-})
+const props = withDefaults(
+  defineProps<{
+    option: EChartsOption
+    height?: string
+    clickable?: boolean
+  }>(),
+  {
+    height: '340px',
+    clickable: false,
+  },
+)
 
 const emit = defineEmits<{ chartClick: [name: string] }>()
 const root = ref<HTMLElement>()
+const reducedMotion = useMediaQuery('(prefers-reduced-motion: reduce)')
 let chart: ReturnType<typeof echarts.init> | null = null
 let observer: ResizeObserver | null = null
 
 function render() {
   if (!chart) return
-  chart.setOption(props.option, { notMerge: true, lazyUpdate: false })
+  chart.setOption(
+    { ...props.option, ...(reducedMotion.value ? { animation: false } : {}) },
+    { notMerge: true, lazyUpdate: false },
+  )
 }
 
 onMounted(async () => {
@@ -34,7 +42,7 @@ onMounted(async () => {
   observer.observe(root.value)
 })
 
-watch(() => props.option, render, { deep: true })
+watch(() => [props.option, reducedMotion.value], render, { deep: true })
 
 onBeforeUnmount(() => {
   observer?.disconnect()
@@ -47,5 +55,8 @@ onBeforeUnmount(() => {
 </template>
 
 <style scoped>
-.chart-canvas { width: 100%; min-height: 260px; }
+.chart-canvas {
+  width: 100%;
+  min-height: 260px;
+}
 </style>
